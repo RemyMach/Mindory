@@ -4,7 +4,9 @@
   "description": "A fabulous memory app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "env-cmd -f ./config/prod.env node src/index.js",
+    "dev": "env-cmd -f ./config/dev.env nodemon src/index.js",
+    "test": "env-cmd -f ./config/test.env jest --runInBand --collectCoverage --watchAll"
   },
   "repository": {
     "type": "git",
