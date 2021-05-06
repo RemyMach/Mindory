@@ -58,6 +58,8 @@ export class SequelizeManager implements SequelizeManagerProps {
         props.user.hasMany(props.session); // User N Session
         props.session.belongsTo(props.user, {foreignKey: 'user_id'}); // Session 1 User
 
+        props.role.hasMany(props.user); // User N Session
+        props.user.belongsTo(props.role, {foreignKey: 'role_id'}); // Session 1 User
     }
 
     private constructor(props: SequelizeManagerProps) {

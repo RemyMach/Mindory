@@ -59,7 +59,6 @@ export class AuthController {
             return null;
         }
         const isSamePassword = await compare(props.password, user.password);
-
         if(!isSamePassword) {
             return null;
         }
@@ -67,6 +66,7 @@ export class AuthController {
         const session = await this.session.create({
             token
         });
+
         await session.setUser(user);
         return session;
     }

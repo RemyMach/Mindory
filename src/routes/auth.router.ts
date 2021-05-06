@@ -43,7 +43,6 @@ authRouter.post("/subscribe", async function(req, res) {
 
     }catch(validationError){
         res.status(400).end();
-        //res.json(BuilderError.returnApiMessage(validationError.message));
     }
 });
 
@@ -57,20 +56,13 @@ authRouter.post("/login", async function(req, res) {
     const authController = await AuthController.getInstance();
     try{
         const session = await authController.log({email, password});
+        if(session === null)
+            return res.status(400).end();
 
-        if(session === null) {
-            res.status(400).end();
-            return;
-        } else {
-            res.json({
-                token: session.token
-            });
-        }
+        return res.status(200).json({token: session.token}).end();
 
     }catch(validationError){
-        console.log(validationError)
         res.status(400).end();
-        //res.json(BuilderError.returnApiMessage(validationError.message));
         return;
     }
 });
