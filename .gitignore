@@ -103,6 +103,8 @@ dist
 # TernJS port file
 .tern-port
 
-#Personal files
-config/**
+# my environmnet files
+/config/dev.env
+/config/prod.env
+/config/test.env
 
