@@ -48,7 +48,7 @@ export class UserController {
 
         const decoded = verify(token, process.env.JWT_SECRET as Secret);
 
-        const user = await UserRepository.getUser(token);
+        const user = await UserRepository.getUserByToken(token);
 
         if(user !== null) {
 
@@ -103,5 +103,29 @@ export class UserController {
         }
 
         return await UserRepository.deleteUser(token);
+    }
+
+    public async authenticateUserWithToken(token: string | undefined): Promise< UserInstance | undefined | null> {
+
+        if(token === undefined) {
+            return undefined;
+        }
+
+        const tokenWithoutBearer = token.replace('Bearer ', '');
+        return await this.getUserByToken(tokenWithoutBearer);
+    }
+
+    public async getUserByToken(token: string): Promise<UserInstance | null> {
+
+        const decoded = verify(token, process.env.JWT_SECRET as Secret);
+
+        const user = await UserRepository.getUserByToken(token);
+
+        if(user !== null) {
+
+            return user;
+        }
+
+        return null;
     }
 }

@@ -18,9 +18,9 @@ export class UserRepository {
             limit
         });
         
-    } 
+    }
 
-    public static async getUser(token: string): Promise<UserInstance | null> {
+    public static async getUserByToken(token: string): Promise<UserInstance | null> {
         
         const userController = await UserController.getInstance();
         return  await userController.user.findOne({

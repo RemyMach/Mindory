@@ -50,6 +50,7 @@ export class AuthController {
 
     public async log(props: UserAuthenticate): Promise<SessionInstance | null> {
 
+        await this.later(1000);
         const user = await this.user.findOne({
             where: {
                 email: props.email
@@ -90,12 +91,11 @@ export class AuthController {
         try{
             // TODO vérifié avec l id user décodé aussi
             const decoded = verify(token, process.env.JWT_SECRET as Secret)
-            const session = await this.session.findOne({
+            return await this.session.findOne({
                 where: {
                     token
                 }
             });
-            return session;
         }catch(e) {
             return null;
         }
@@ -128,6 +128,12 @@ export class AuthController {
         }catch {
             return null;
         }
+    }
+
+    private async later(delay: number): Promise<any> {
+        return new Promise(function(resolve) {
+            setTimeout(resolve, delay);
+        });
     }
 
 }
