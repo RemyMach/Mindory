@@ -128,4 +128,17 @@ export class UserController {
 
         return null;
     }
+
+    public async getUserByEmail(email: string): Promise<UserInstance | null> {
+
+
+        const user = await UserRepository.getUserByEmail(email);
+
+        if(user !== null) {
+
+            return user;
+        }
+
+        return null;
+    }
 }

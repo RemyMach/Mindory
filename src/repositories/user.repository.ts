@@ -39,6 +39,17 @@ export class UserRepository {
         });
     }
 
+    public static async getUserByEmail(email: string): Promise<UserInstance | null> {
+
+        const userController = await UserController.getInstance();
+        return  await userController.user.findOne({
+            attributes: ['id','name', 'surname', 'email'],
+            where: {
+                email
+            }
+        });
+    }
+
 
     public static async getUserById(id: number): Promise<UserInstance | null> {
         

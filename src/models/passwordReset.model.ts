@@ -1,5 +1,15 @@
-import {DataTypes, HasManyGetAssociationsMixin, Model, ModelCtor, Optional, Sequelize} from "sequelize";
+import {
+    BelongsToGetAssociationMixin,
+    BelongsToSetAssociationMixin,
+    DataTypes,
+    HasManyGetAssociationsMixin,
+    Model,
+    ModelCtor,
+    Optional,
+    Sequelize
+} from "sequelize";
 import {UserInstance} from "./user.model";
+import {RoleInstance} from "./role.model";
 
 export interface PasswordResetProps {
     id: number;
@@ -13,7 +23,8 @@ export interface RoleUpdateOption {
 export interface PasswordResetCreationProps extends Optional<PasswordResetProps, "id"> {}
 
 export interface PasswordResetInstance extends Model<PasswordResetProps, PasswordResetCreationProps>, PasswordResetProps {
-
+    setUser: BelongsToSetAssociationMixin<UserInstance, "id">;
+    getUser: BelongsToGetAssociationMixin<UserInstance>;
 }
 
 export default function(sequelize: Sequelize): ModelCtor<PasswordResetInstance> {
