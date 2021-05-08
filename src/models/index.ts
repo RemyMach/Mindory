@@ -3,6 +3,7 @@ import userCreator, {UserInstance} from "./user.model";
 import sessionCreator, {SessionInstance} from "./session.model";
 import {Dialect} from "sequelize/types/lib/sequelize";
 import roleCreator, {RoleInstance} from "./role.model";
+import passwordResetCreator, {PasswordResetInstance} from "./passwordReset.model";
 
 
 export interface SequelizeManagerProps {
@@ -10,6 +11,7 @@ export interface SequelizeManagerProps {
     user: ModelCtor<UserInstance>;
     session: ModelCtor<SessionInstance>;
     role: ModelCtor<RoleInstance>;
+    passwordReset: ModelCtor<PasswordResetInstance>;
 
 }
 
@@ -21,6 +23,7 @@ export class SequelizeManager implements SequelizeManagerProps {
     user: ModelCtor<UserInstance>;
     session: ModelCtor<SessionInstance>;
     role: ModelCtor<RoleInstance>;
+    passwordReset: ModelCtor<PasswordResetInstance>;
 
 
     public static async getInstance(): Promise<SequelizeManager> {
@@ -45,7 +48,8 @@ export class SequelizeManager implements SequelizeManagerProps {
             sequelize,
             user: userCreator(sequelize),
             session: sessionCreator(sequelize),
-            role: roleCreator(sequelize)
+            role: roleCreator(sequelize),
+            passwordReset: passwordResetCreator(sequelize)
         }
 
         SequelizeManager.associate(managerProps);
@@ -60,6 +64,9 @@ export class SequelizeManager implements SequelizeManagerProps {
 
         props.role.hasMany(props.user); // User N Session
         props.user.belongsTo(props.role, {foreignKey: 'role_id'}); // Session 1 User
+
+        props.user.hasMany(props.passwordReset);
+        props.passwordReset.belongsTo(props.user,{foreignKey: 'user_id'});
     }
 
     private constructor(props: SequelizeManagerProps) {
@@ -67,5 +74,6 @@ export class SequelizeManager implements SequelizeManagerProps {
         this.user = props.user;
         this.session = props.session;
         this.role = props.role;
+        this.passwordReset = props.passwordReset;
     }
 }
