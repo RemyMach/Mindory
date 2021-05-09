@@ -4,10 +4,10 @@ import {
     EmailApiSendEmailResponse
 } from "../../services/mailing/email-sender";
 
-export class MockEmailApi implements EmailSenderEmailApi {
-    sendEmail({toEmail}: EmailSenderSendEmailArgs): Promise<EmailApiSendEmailResponse> {
-        return new Promise((resolve) =>
-            resolve({toEmail, status: 'success'}));
-    }
+export const mockSendEmail = jest.fn();
 
+export class MockEmailApi implements EmailSenderEmailApi {
+    sendEmail(_args: EmailSenderSendEmailArgs): Promise<EmailApiSendEmailResponse> {
+        return mockSendEmail();
+    }
 }

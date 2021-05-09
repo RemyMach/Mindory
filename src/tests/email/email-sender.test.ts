@@ -1,5 +1,5 @@
 import {EmailSender} from "../../services/mailing";
-import {MockEmailApi} from "./mock-email-api";
+import {MockEmailApi, mockSendEmail} from "./mock-email-api";
 
 it('should throw an error if the email server is deactivated', async () => {
     const emailSender = EmailSender.getInstance();
@@ -20,5 +20,5 @@ it('should send the email correctly if the EmailSender is active and the EmailAp
     emailSender.setEmailApi(mockEmailApi);
 
     const res = await emailSender.sendEmail({toEmail: 'test@test.fr'});
-    expect(res.toEmail).toEqual('test@test.fr');
+    expect(mockSendEmail).toHaveBeenCalledTimes(1);
 });
