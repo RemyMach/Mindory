@@ -20,8 +20,10 @@ passwordResetRouter.post("/", async function(req, res) {
 
     const passwordController = await PasswordResetController.getInstance();
     const passwordReset = await passwordController.createPasswordReset(user);
-    if (!passwordController)
+    if (!passwordReset)
         return res.status(400).end()
+
+    await passwordController.deleteOtherTokenBeforeTheLastOne(user, passwordReset);
 
     res.status(201).json(passwordReset).end();
 });

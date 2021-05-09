@@ -1,10 +1,11 @@
-import {ModelCtor} from "sequelize";
+import {ModelCtor, Op} from "sequelize";
 import {UserInstance, UserUpdateOptions, UserUpdatePasswordOptions} from "../models/user.model";
 import {SequelizeManager} from "../models";
 import {RoleInstance} from "../models/role.model";
 import {Secret, sign, verify} from 'jsonwebtoken';
 import {SessionInstance} from "../models/session.model";
 import {PasswordResetInstance} from "../models/passwordReset.model";
+import {PasswordResetRepository} from "../repositories/passwordReset.repository";
 
 export class PasswordResetController {
 
@@ -35,10 +36,20 @@ export class PasswordResetController {
                 token
             });
             await passwordReset.setUser(user);
+            await this.deleteOtherTokenBeforeTheLastOne(user, passwordReset);
         }catch {
             return null;
         }
         return passwordReset;
+    }
+
+    public async deleteOtherTokenBeforeTheLastOne(user: UserInstance, passwordReset: PasswordResetInstance): Promise<void> {
+
+        const passwordResetInstances = await PasswordResetRepository.getAllPasswordResetForAUserExceptLastOne(user, passwordReset);
+        if(!passwordResetInstances)
+            return;
+
+        await PasswordResetRepository.destroyPasswordReset(passwordResetInstances);
     }
 
 }
