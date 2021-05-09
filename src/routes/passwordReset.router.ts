@@ -9,7 +9,7 @@ passwordResetRouter.post("/", async function(req, res) {
     const email = req.body.email;
 
     if(email === undefined) {
-        res.status(400).end();
+        res.status(202).end();
         return;
     }
 
@@ -21,11 +21,11 @@ passwordResetRouter.post("/", async function(req, res) {
     const passwordController = await PasswordResetController.getInstance();
     const passwordReset = await passwordController.createPasswordReset(user);
     if (!passwordReset)
-        return res.status(400).end()
+        return res.status(202).end()
 
     await passwordController.deleteOtherTokenBeforeTheLastOne(user, passwordReset);
 
-    res.status(201).json(passwordReset).end();
+    res.status(202).end();
 });
 
 export {

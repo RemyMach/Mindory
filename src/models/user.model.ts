@@ -13,6 +13,7 @@ import {SessionInstance} from "./session.model";
 import {RoleInstance} from "./role.model";
 import {SessionRepository} from '../repositories/session.repository';
 import {hash} from "bcrypt";
+import {PasswordResetInstance} from "./passwordReset.model";
 
 
 export interface UserAuthenticate {
@@ -59,6 +60,9 @@ export interface UserInstance extends Model<UserProps, UserCreationProps>, UserP
 
     setRole: BelongsToSetAssociationMixin<RoleInstance, "id">;
     getRole: BelongsToGetAssociationMixin<RoleInstance>;
+
+    addPasswordReset: HasManyAddAssociationMixin<PasswordResetInstance, "id">;
+    getPassword_Resets: HasManyGetAssociationsMixin<PasswordResetInstance>;
 }
 
 export default function(sequelize: Sequelize): ModelCtor<UserInstance> {
