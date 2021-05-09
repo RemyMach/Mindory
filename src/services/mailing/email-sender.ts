@@ -2,13 +2,13 @@ export type EmailSenderSendEmailArgs = {
     toEmail: string;
 }
 
-export type EmailSenderSendEmailResponse = {
+export type EmailApiSendEmailResponse = {
     toEmail: string;
     status: 'success' | 'error';
 }
 
 export interface EmailSenderEmailApi {
-    sendEmail: (args: EmailSenderSendEmailArgs) => Promise<EmailSenderSendEmailResponse>;
+    sendEmail: (args: EmailSenderSendEmailArgs) => Promise<EmailApiSendEmailResponse>;
 }
 
 export class EmailSender implements EmailSenderEmailApi{
@@ -35,9 +35,13 @@ export class EmailSender implements EmailSenderEmailApi{
         this.isActive = true;
     }
 
-    async sendEmail(args: EmailSenderSendEmailArgs): Promise<EmailSenderSendEmailResponse> {
+    setEmailApi(emailApi: EmailSenderEmailApi): void {
+        this.emailApi = emailApi;
+    }
+
+    async sendEmail(args: EmailSenderSendEmailArgs): Promise<EmailApiSendEmailResponse> {
         this.validateEmailSender();
-        return new Promise(resolve => resolve({toEmail: args.toEmail, status: 'success'}));
+        return this.emailApi!.sendEmail(args);
     }
 
     private validateEmailSender(): void {
