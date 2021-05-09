@@ -1,7 +1,6 @@
 import {destroyTablesElement, fillTables} from "./fixtures";
 import request from "supertest";
 import app from "../app";
-import {PasswordResetRepository} from "../repositories/passwordReset.repository";
 import {UserRepository} from "../repositories/user.repository";
 
 
