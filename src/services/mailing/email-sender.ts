@@ -1,4 +1,4 @@
-export type EmailSenderSendEmailArgs = {
+export type EmailApiSendEmailArgs = {
     toEmail: string;
 }
 
@@ -8,7 +8,7 @@ export type EmailApiSendEmailResponse = {
 }
 
 export interface EmailSenderEmailApi {
-    sendEmail: (args: EmailSenderSendEmailArgs) => Promise<EmailApiSendEmailResponse>;
+    sendSignUpVerificationEmail: (args: EmailApiSendEmailArgs) => Promise<EmailApiSendEmailResponse>;
 }
 
 export class EmailSender implements EmailSenderEmailApi{
@@ -39,9 +39,9 @@ export class EmailSender implements EmailSenderEmailApi{
         this.emailApi = emailApi;
     }
 
-    async sendEmail(args: EmailSenderSendEmailArgs): Promise<EmailApiSendEmailResponse> {
+    async sendSignUpVerificationEmail(args: EmailApiSendEmailArgs): Promise<EmailApiSendEmailResponse> {
         this.validateEmailSender();
-        return this.emailApi!.sendEmail(args);
+        return this.emailApi!.sendSignUpVerificationEmail(args);
     }
 
     private validateEmailSender(): void {

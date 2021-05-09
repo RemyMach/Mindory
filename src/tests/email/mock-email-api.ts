@@ -1,13 +1,13 @@
 import {
     EmailSenderEmailApi,
-    EmailSenderSendEmailArgs,
+    EmailApiSendEmailArgs,
     EmailApiSendEmailResponse
 } from "../../services/mailing/email-sender";
 
-export const mockSendEmail = jest.fn();
+export const mockSendSignUpVerificationEmail = jest.fn();
 
 export class MockEmailApi implements EmailSenderEmailApi {
-    sendEmail(_args: EmailSenderSendEmailArgs): Promise<EmailApiSendEmailResponse> {
-        return mockSendEmail();
+    sendSignUpVerificationEmail(_args: EmailApiSendEmailArgs): Promise<EmailApiSendEmailResponse> {
+        return mockSendSignUpVerificationEmail();
     }
 }
