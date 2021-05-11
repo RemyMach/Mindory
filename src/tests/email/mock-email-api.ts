@@ -11,10 +11,10 @@ export const mockSendEmail = jest.fn();
 
 export class MockEmailApi extends EmailSenderEmailApi {
     sendSignUpVerificationEmail({toEmail}: EmailApiSendEmailArgs): Promise<EmailApiSendEmailResponse> {
-        this.sendEmail();
+        this.sendEmail({toEmail});
         return mockSendSignUpVerificationEmail(toEmail);
     }
-    protected sendEmail(): void {
+    protected sendEmail(args: EmailApiSendEmailArgs): void {
         mockSendEmail();
     }
 }
