@@ -5,7 +5,6 @@ import {MailjetApi} from "./services/mailing/mailjet-api";
 const port = process.env.PORT || 3000
 const emailSender = EmailSender.getInstance();
 emailSender.activate();
-//emailSender.setEmailApi(new NodemailerEmailApi());
 emailSender.setEmailApi(new MailjetApi());
 
 app.listen(port, async () => {

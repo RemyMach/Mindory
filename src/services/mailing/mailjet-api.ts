@@ -96,7 +96,7 @@ export class MailjetApi implements EmailApi{
         const { emailVerificationToken } = args;
 
         // TODO: this url will change once we integrate kubernetes in our application
-        return `http://localhost:3000/passwordReset/${emailVerificationToken}`;
+        return `${process.env.FRONT_URL}:${process.env.FRONT_PORT}/reset/${emailVerificationToken}`;
     };
 
 }

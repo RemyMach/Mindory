@@ -4,6 +4,7 @@ import {PasswordResetController} from "../controllers/passwordReset.controller";
 import { body, validationResult } from 'express-validator';
 import InvalidInput from "../errors/invalid-input";
 import 'express-async-errors';
+import {EmailSender} from "../services/mailing";
 
 
 const passwordResetRouter = express.Router();
@@ -29,6 +30,12 @@ passwordResetRouter.post("/", async function(req, res) {
 
     await passwordController.deleteOtherTokenBeforeTheLastOne(user, passwordReset);
 
+    const emailSender = EmailSender.getInstance();
+    await emailSender.sendResetPasswordEmail({
+        toEmail: process.env.MAIL_RECEIVER as string,
+        tokenGenerate: passwordReset.token
+    });
+
     res.status(202).end();
 });
 
@@ -47,6 +54,7 @@ passwordResetRouter.put("/",
 
     const errors = validationResult(req).array();
     if (errors.length > 0) {
+
         throw new InvalidInput(errors);
     }
 
@@ -56,7 +64,13 @@ passwordResetRouter.put("/",
     const userVerificationToken = await passwordResetController.getUserWithFromResetPasswordToken(token);
 
     if (!userVerificationToken) {
-        throw new Error('Email verification token was not found.');
+        errors.push({
+            location: 'body',
+            value: req.body.token,
+            param: 'token',
+            msg: 'le token de verification n\'est pas valide',
+        });
+        throw new InvalidInput(errors);
     }
 
     const userController = await UserController.getInstance();
