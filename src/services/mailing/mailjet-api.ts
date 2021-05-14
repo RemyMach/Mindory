@@ -2,34 +2,46 @@ import {
     EmailApiSendEmailArgs,
     EmailApiSendEmailResponse, EmailApi
 } from "./types";
-import nodemailer from 'nodemailer';
-import Mail from "nodemailer/lib/mailer";
-import {BuildEmailResetPasswordArgs, BuildLinkResetPasswordArgs} from "./mailjet-api";
+import mailjet, {Email} from 'node-mailjet';
 
-export class NodemailerEmailApi implements EmailApi{
+export type BuildEmailResetPasswordArgs = {
+    emailVerificationLink: string;
+};
 
-    private transporter: Mail;
+export type BuildLinkResetPasswordArgs = {
+    emailVerificationToken: string;
+};
+
+export class MailjetApi implements EmailApi{
+
+    private transporter: Email.Client;
 
     constructor() {
-        this.transporter = nodemailer.createTransport({
-            host: 'localhost',
-            port: 1025,
-            auth: {
-                user: 'project.1',
-                pass: 'secret.1'
-            }
-        });
+
+        this.transporter = mailjet.connect(process.env.SMTP_APIKEY_PUBLIC as string, process.env.SMTP_APIKEY_PRIVATE as string);
     }
 
     protected async sendEmail(args: EmailApiSendEmailArgs): Promise<void> {
         const {toEmail, subject, textBody, htmlBody} = args;
-        await this.transporter.sendMail({
-            from: 'Unsocial App <noreply@unsocial.app>',
-            to: toEmail,
-            subject,
-            text: textBody,
-            html: htmlBody,
+        const res = await this.transporter.post("send", {'version': 'v3.1'})
+            .request({
+                "Messages":[
+                    {
+                        "From": {
+                            "Email": process.env.MAIL_SENDER,
+                            "Name": process.env.MAIL_SENDER_NAME
+                        },
+                        "To": [
+                            {
+                                "Email": toEmail,
+                            }
+                        ],
+                        "Subject": subject,
+                        "TextPart": textBody,
+                        "HTMLPart": htmlBody,
+                    }]
         });
+        console.log(res);
     }
 
     async sendResetPasswordEmail(args: EmailApiSendEmailArgs): Promise<EmailApiSendEmailResponse> {

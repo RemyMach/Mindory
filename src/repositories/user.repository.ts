@@ -134,11 +134,10 @@ export class UserRepository {
         return await userController.getUser(token);
     }
 
-    public static async updateUserpassword(token: string, new_password: string | undefined): Promise<UserInstance | null> {
+    public static async updateUserpassword(user: UserInstance, new_password: string | undefined): Promise<UserInstance | null> {
 
         const userController = await UserController.getInstance();
-        const user = await userController.getUser(token);
-    
+
         const email_user = user?.email;
         
         if(email_user === undefined || new_password === undefined) {
@@ -156,7 +155,7 @@ export class UserRepository {
                 individualHooks: true
             });
 
-        return await userController.getUser(token);
+        return await userController.getUserByEmail(email_user);
     }
 
     public static async deleteUser(token: string): Promise<void | null> {

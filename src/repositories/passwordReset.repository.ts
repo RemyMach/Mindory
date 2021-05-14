@@ -22,9 +22,30 @@ export class PasswordResetRepository {
         });
     }
 
+    public static async getAllPasswordResetForAUser(user: UserInstance): Promise<PasswordResetInstance[] | null> {
+        const passwordController = await PasswordResetController.getInstance();
+        return await passwordController.passwordReset.findAll({
+            include: [{
+                model: passwordController.user,
+                where: {
+                    id: user.id
+                }
+            }]
+        });
+    }
+
     public static async destroyPasswordReset(passwordResetForAUser: PasswordResetInstance[]): Promise<void> {
         for (const passwordReset of passwordResetForAUser) {
             await passwordReset.destroy();
         }
+    }
+
+    public static async getPasswordResetFromToken(token: string): Promise<PasswordResetInstance | null> {
+        const passwordController = await PasswordResetController.getInstance();
+        return await passwordController.passwordReset.findOne({
+            where: {
+                token
+            }
+        });
     }
 }

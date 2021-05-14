@@ -71,6 +71,11 @@ export class UserController {
         return user;
     }
 
+    public async resetPassword(user: UserInstance, new_password: string) : Promise<UserInstance | null> {
+
+        return await UserRepository.updateUserpassword(user, new_password);
+    }
+
     public async updatePassword(token: string, props: UserUpdatePasswordOptions): Promise<UserInstance | null> {
 
         const user = await UserRepository.getUserEncryptedPassword(token);
@@ -87,7 +92,7 @@ export class UserController {
             throw new Error("The password is invalid");
         }
 
-        return await UserRepository.updateUserpassword(token, props.new_password);
+        return await UserRepository.updateUserpassword(user, props.new_password);
     }
 
     public async deleteUser(token: string, password: string): Promise<void | null> {

@@ -1,9 +1,9 @@
-import {EmailApiSendEmailArgs, EmailApiSendEmailResponse, IEmailSender, EmailSenderEmailApi} from "./types";
+import {EmailApiSendEmailArgs, EmailApiSendEmailResponse, EmailApi, EmailApiSendResetPasswordEmailArgs} from "./types";
 
-export class EmailSender implements IEmailSender{
+export class EmailSender implements EmailApi{
     private isActive = false;
     private static emailSenderInstance: EmailSender;
-    private emailApi: EmailSenderEmailApi | undefined;
+    private emailApi: EmailApi | undefined;
 
     static getInstance() {
         if (!this.emailSenderInstance) {
@@ -27,13 +27,13 @@ export class EmailSender implements IEmailSender{
         this.emailSenderInstance = new EmailSender();
     }
 
-    setEmailApi(emailApi: EmailSenderEmailApi): void {
+    setEmailApi(emailApi: EmailApi): void {
         this.emailApi = emailApi;
     }
 
-    async sendSignUpVerificationEmail(args:EmailApiSendEmailArgs): Promise<EmailApiSendEmailResponse> {
+    async sendResetPasswordEmail(args: EmailApiSendResetPasswordEmailArgs): Promise<EmailApiSendEmailResponse> {
         this.validateEmailSender();
-        return this.emailApi!.sendSignUpVerificationEmail(args);
+        return this.emailApi!.sendResetPasswordEmail(args);
     }
 
     private validateEmailSender(): void {

@@ -6,6 +6,7 @@ import {Secret, sign, verify} from 'jsonwebtoken';
 import {SessionInstance} from "../models/session.model";
 import {PasswordResetInstance} from "../models/passwordReset.model";
 import {PasswordResetRepository} from "../repositories/passwordReset.repository";
+import {generateEmailVerificationToken} from "../utils/password_reset/password_reset";
 
 export class PasswordResetController {
 
@@ -28,10 +29,22 @@ export class PasswordResetController {
         this.passwordReset = passwordReset;
     }
 
+    public async getUserWithFromResetPasswordToken(token: string): Promise< UserInstance | null> {
+
+        try {
+            const passwordResetInstance = await PasswordResetRepository.getPasswordResetFromToken(token);
+            if(!passwordResetInstance)
+                return null;
+            return await passwordResetInstance.getUser();
+        }catch {
+            return null;
+        }
+    }
+
     public async createPasswordReset(user: UserInstance): Promise<PasswordResetInstance | null> {
         let passwordReset : PasswordResetInstance;
         try {
-            const token = sign({ id: user.id.toString()}, process.env.JWT_SECRET as Secret);
+            const token = generateEmailVerificationToken();
             passwordReset = await this.passwordReset.create({
                 token
             });
@@ -46,6 +59,15 @@ export class PasswordResetController {
     public async deleteOtherTokenBeforeTheLastOne(user: UserInstance, passwordReset: PasswordResetInstance): Promise<void> {
 
         const passwordResetInstances = await PasswordResetRepository.getAllPasswordResetForAUserExceptLastOne(user, passwordReset);
+        if(!passwordResetInstances)
+            return;
+
+        await PasswordResetRepository.destroyPasswordReset(passwordResetInstances);
+    }
+
+    public async deleteAllTokenForAUser(user: UserInstance): Promise<void> {
+
+        const passwordResetInstances = await PasswordResetRepository.getAllPasswordResetForAUser(user);
         if(!passwordResetInstances)
             return;
 
