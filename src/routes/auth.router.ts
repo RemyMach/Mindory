@@ -2,6 +2,7 @@ import express from "express";
 import {AuthController} from "../controllers/auth.controller";
 import {authMiddleware} from "../middlewares/auth.middleware";
 import {UserRepository} from "../repositories/user.repository";
+import 'express-async-errors';
 
 const authRouter = express.Router();
 

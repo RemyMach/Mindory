@@ -1,4 +1,4 @@
-import {EmailApiSendEmailArgs, EmailApiSendEmailResponse, EmailApi, EmailApiSendResetPasswordEmailArgs} from "./types";
+import {EmailApiSendEmailResponse, EmailApi, EmailApiSendResetPasswordEmailArgs} from "./types";
 
 export class EmailSender implements EmailApi{
     private isActive = false;

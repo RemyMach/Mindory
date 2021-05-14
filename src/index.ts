@@ -10,5 +10,5 @@ emailSender.setEmailApi(new MailjetApi());
 
 app.listen(port, async () => {
     console.log('Server is up on port ' + port);
-    await emailSender.sendSignUpVerificationEmail({toEmail: 'remygt@hotmail.fr'});
+    //await emailSender.sendResetPasswordEmail({toEmail: 'remygt@hotmail.fr'});
 });

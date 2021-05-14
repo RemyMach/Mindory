@@ -1,6 +1,7 @@
 import express from "express";
 import {AuthController} from "../controllers/auth.controller";
 import {UserController} from "../controllers/user.controller";
+import 'express-async-errors';
 
 
 const userRouter = express.Router();
