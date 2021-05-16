@@ -2,6 +2,8 @@ import {destroyTablesElement, fillTables} from "./fixtures";
 import app from '../app';
 import {SessionFixture} from "./fixtures/session.fixture";
 import request from "supertest";
+import {MailjetApi} from "../services/mailing/mailjet-api";
+import {EmailSender, NodemailerEmailApi} from "../services/mailing";
 
 beforeEach(async (done) => {
     await destroyTablesElement();

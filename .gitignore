@@ -107,4 +107,5 @@ dist
 /config/dev.env
 /config/prod.env
 /config/test.env
+.DS_Store
 

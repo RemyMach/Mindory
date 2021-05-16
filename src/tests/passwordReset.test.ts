@@ -2,11 +2,18 @@ import {destroyTablesElement, fillTables} from "./fixtures";
 import request from "supertest";
 import app from "../app";
 import {UserRepository} from "../repositories/user.repository";
+import {MockEmailApi} from "./email/mock-email-api";
+import {EmailSender} from "../services/mailing";
 
 
 beforeEach(async (done) => {
     await destroyTablesElement();
     await fillTables();
+    const emailSender = EmailSender.getInstance();
+    const mockEmailApi = new MockEmailApi();
+
+    emailSender.activate();
+    emailSender.setEmailApi(mockEmailApi);
     done();
 });
 
