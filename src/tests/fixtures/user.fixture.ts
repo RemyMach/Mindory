@@ -27,60 +27,61 @@ export class UserFixture implements fixture{
 
         const manager = await SequelizeManager.getInstance();
         const roleFixture = await RoleFixture.getInstance();
-        
-        this.user_eric = await manager.user.create({
-            name: "eric",
-            surname: "delacroix",
-            email: "eric@gmail.com",
-            password: "azertyuiop",
-            username: "eric"
-        });
-        await this.user_eric.setRole(roleFixture.role_user);
 
-        this.user_jean = await manager.user.create({
-            name: "Jean",
-            surname: "tom",
-            email: "tom@gmail.com",
-            password: "azertyuiop",
-            username: "jean"
-        });
-        await this.user_jean.setRole(roleFixture.role_user);
+        await Promise.all([
+            this.user_eric = await manager.user.create({
+                name: "eric",
+                surname: "delacroix",
+                email: "eric@gmail.com",
+                password: "azertyuiop",
+                username: "eric"
+            }),
+            this.user_jean = await manager.user.create({
+                name: "Jean",
+                surname: "tom",
+                email: "tom@gmail.com",
+                password: "azertyuiop",
+                username: "jean"
+            }),
+            this.user_pam = await manager.user.create({
+                name: "gentil",
+                surname: "Pam",
+                email: "pam.gentil@gmail.com",
+                password: "azertyuiop",
+                username: "val-de-jean"
+            }),
+            this.user_admin_margot = await manager.user.create({
+                name: "margaux",
+                surname: "prodic",
+                email: "margaux.prodic@gmail.com",
+                password: "azertyuiop",
+                username: "michel"
+            }),
+            this.user_admin_rachel = await manager.user.create({
+                name: "Rachel",
+                surname: "Friend",
+                email: "rachel@notime.com",
+                password: "azertyuiop",
+                username: "tati"
+            }),
+            this.user_admin_leonard = await manager.user.create({
+                name: "Leonard",
+                surname: "Dicapr",
+                email: "leonardo.discpar@gmail.com",
+                password: "azertyuiop",
+                username: "darkSasuke"
+            }),
+        ]);
 
-        this.user_pam = await manager.user.create({
-            name: "gentil",
-            surname: "Pam",
-            email: "pam.gentil@gmail.com",
-            password: "azertyuiop",
-            username: "val-de-jean"
-        });
-        await this.user_pam.setRole(roleFixture.role_user);
+        await Promise.all([
+            await this.user_eric.setRole(roleFixture.role_user),
+            await this.user_jean.setRole(roleFixture.role_user),
+            await this.user_pam.setRole(roleFixture.role_user),
+            await this.user_admin_margot.setRole(roleFixture.role_admin),
+            await this.user_admin_rachel.setRole(roleFixture.role_admin),
+            await this.user_admin_leonard.setRole(roleFixture.role_admin)
+        ]);
 
-        this.user_admin_margot = await manager.user.create({
-            name: "margaux",
-            surname: "prodic",
-            email: "margaux.prodic@gmail.com",
-            password: "azertyuiop",
-            username: "michel"
-        });
-        await this.user_admin_margot.setRole(roleFixture.role_admin);
-
-        this.user_admin_rachel = await manager.user.create({
-            name: "Rachel",
-            surname: "Friend",
-            email: "rachel@notime.com",
-            password: "azertyuiop",
-            username: "tati"
-        });
-        await this.user_admin_rachel.setRole(roleFixture.role_admin);
-
-        this.user_admin_leonard = await manager.user.create({
-            name: "Leonard",
-            surname: "Dicapr",
-            email: "leonardo.discpar@gmail.com",
-            password: "azertyuiop",
-            username: "darkSasuke"
-        });
-        await this.user_admin_leonard.setRole(roleFixture.role_admin);
     }
 
     public async destroyFieldsTable(): Promise<void> {

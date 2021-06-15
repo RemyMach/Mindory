@@ -26,20 +26,23 @@ export class SessionFixture implements fixture{
         const manager = await SequelizeManager.getInstance();
         const userFixture = await UserFixture.getInstance();
 
-        this.session_user_admin = await manager.session.create({
-            token: sign({ id: userFixture.user_admin_leonard?.id.toString()}, process.env.JWT_SECRET as Secret)
-        });
-        userFixture.user_admin_leonard?.addSession(this.session_user_admin);
+        await Promise.all([
+            this.session_user_admin = await manager.session.create({
+                token: sign({ id: userFixture.user_admin_leonard?.id.toString()}, process.env.JWT_SECRET as Secret)
+            }),
+            this.session_user_normal = await manager.session.create({
+                token: sign({ id: userFixture.user_pam?.id.toString()}, process.env.JWT_SECRET as Secret)
+            }),
+            this.session_user_normal_jean = await manager.session.create({
+                token: sign({ id: userFixture.user_jean?.id.toString()}, process.env.JWT_SECRET as Secret)
+            })
+        ]);
 
-        this.session_user_normal = await manager.session.create({
-            token: sign({ id: userFixture.user_pam?.id.toString()}, process.env.JWT_SECRET as Secret)
-        });
-        userFixture.user_pam?.addSession(this.session_user_normal);
-
-        this.session_user_normal_jean = await manager.session.create({
-            token: sign({ id: userFixture.user_jean?.id.toString()}, process.env.JWT_SECRET as Secret)
-        });
-        userFixture.user_jean?.addSession(this.session_user_normal_jean);
+        await Promise.all([
+            await userFixture.user_admin_leonard?.addSession(this.session_user_admin),
+            await userFixture.user_pam?.addSession(this.session_user_normal),
+            await userFixture.user_jean?.addSession(this.session_user_normal_jean)
+        ]);
     }
 
     public async destroyFieldsTable(): Promise<void> {
