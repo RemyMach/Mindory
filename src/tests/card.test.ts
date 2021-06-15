@@ -40,7 +40,7 @@ describe("Determine the card routes behavior", () => {
                 .expect(400)
         })
 
-        it('should return 400 because deckId is not fille', async () => {
+        it('should return 400 because deckId is not fill', async () => {
 
             const sessionFixture = await SessionFixture.getInstance();
 
