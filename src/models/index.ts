@@ -4,6 +4,8 @@ import sessionCreator, {SessionInstance} from "./session.model";
 import {Dialect} from "sequelize/types/lib/sequelize";
 import roleCreator, {RoleInstance} from "./role.model";
 import passwordResetCreator, {PasswordResetInstance} from "./passwordReset.model";
+import cardCreator, {CardInstance} from "./card.model";
+import deckCreator, {DeckInstance} from "./deck.model";
 
 
 export interface SequelizeManagerProps {
@@ -12,7 +14,8 @@ export interface SequelizeManagerProps {
     session: ModelCtor<SessionInstance>;
     role: ModelCtor<RoleInstance>;
     passwordReset: ModelCtor<PasswordResetInstance>;
-
+    card: ModelCtor<CardInstance>;
+    deck: ModelCtor<DeckInstance>;
 }
 
 export class SequelizeManager implements SequelizeManagerProps {
@@ -24,6 +27,8 @@ export class SequelizeManager implements SequelizeManagerProps {
     session: ModelCtor<SessionInstance>;
     role: ModelCtor<RoleInstance>;
     passwordReset: ModelCtor<PasswordResetInstance>;
+    card: ModelCtor<CardInstance>;
+    deck: ModelCtor<DeckInstance>;
 
 
     public static async getInstance(): Promise<SequelizeManager> {
@@ -49,7 +54,9 @@ export class SequelizeManager implements SequelizeManagerProps {
             user: userCreator(sequelize),
             session: sessionCreator(sequelize),
             role: roleCreator(sequelize),
-            passwordReset: passwordResetCreator(sequelize)
+            passwordReset: passwordResetCreator(sequelize),
+            card: cardCreator(sequelize),
+            deck: deckCreator(sequelize)
         }
 
         SequelizeManager.associate(managerProps);
@@ -67,6 +74,10 @@ export class SequelizeManager implements SequelizeManagerProps {
 
         props.user.hasMany(props.passwordReset);
         props.passwordReset.belongsTo(props.user,{foreignKey: 'user_id'});
+
+        props.card.belongsTo(props.card, {foreignKey: 'card_associate_id'});
+        props.deck.hasMany(props.card);
+        props.card.belongsTo(props.deck, {foreignKey: 'deck_id'});
     }
 
     private constructor(props: SequelizeManagerProps) {
@@ -75,5 +86,7 @@ export class SequelizeManager implements SequelizeManagerProps {
         this.session = props.session;
         this.role = props.role;
         this.passwordReset = props.passwordReset;
+        this.card = props.card;
+        this.deck = props.deck;
     }
 }

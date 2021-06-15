@@ -20,14 +20,17 @@ export async function authMiddleware(req: express.Request, res: express.Response
     }
 }
 
-export async function adminAuthMiddleware(req: express.Request, res: express.Response, next: express.NextFunction) {
+export async function adminAuthMiddleware(err: Error,req: express.Request, res: express.Response,  next: express.NextFunction) {
+    if(err)
+        next();
+
     const auth = req.headers["authorization"];
 
     if(auth !== undefined) {
         const token = auth.replace('Bearer ', '');
         const authController = await AuthController.getInstance();
         const session = await authController.getSpecificRoleSession(token, ['admin']);
-
+        console.log(session)
         if(session !== null) {
             next();
             return;

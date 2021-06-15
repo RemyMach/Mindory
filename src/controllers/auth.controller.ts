@@ -103,12 +103,10 @@ export class AuthController {
 
     public async getSpecificRoleSession(token: string, roles: string[]): Promise<SessionInstance | null> {
         try{
-            // TODO vérifié avec l id user décodé aussi
             const roles_formated = roles.map(role => {
                 return {'label': role};
             })
 
-            const decoded = verify(token, process.env.JWT_SECRET as Secret)
             const session = await this.session.findOne({
                 where: {
                     token
@@ -123,9 +121,11 @@ export class AuthController {
                     }],
                 },
             });
+            console.log(session)
 
             return session;
-        }catch {
+        }catch(e) {
+            console.log(e)
             return null;
         }
     }
