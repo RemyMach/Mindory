@@ -18,9 +18,52 @@ describe("Determine the card routes behavior", () => {
 
     describe("Test to uploading a file", () => {
 
-        const filePath = `${process.env.FILEDIRECTORY as string}python.png`;
+        const filePath = `${process.env.FILE_DIRECTORY as string}python.png`;
 
-        it('should create a card with no card Associate', async () => {
+        it('should return 400 because deck doesn\'t exist', async () => {
+
+            const sessionFixture = await SessionFixture.getInstance();
+
+            await request(app).post("/cards")
+                .set('Authorization', `Bearer ${sessionFixture.session_user_admin?.token}`)
+                .attach("image", filePath)
+                .field("deckId", 1200)
+                .expect(400)
+        })
+        it('should return 400 because text and image are not filled', async () => {
+
+            const sessionFixture = await SessionFixture.getInstance();
+
+            await request(app).post("/cards")
+                .set('Authorization', `Bearer ${sessionFixture.session_user_admin?.token}`)
+                .field("deckId", 1200)
+                .expect(400)
+        })
+
+        it('should return 400 because deckId is not fille', async () => {
+
+            const sessionFixture = await SessionFixture.getInstance();
+
+            await request(app).post("/cards")
+                .set('Authorization', `Bearer ${sessionFixture.session_user_admin?.token}`)
+                .attach("image", filePath)
+                .field("deckId", 1200)
+                .expect(400)
+        })
+
+        it('should return 400 because cardAssociate have already a card associate', async () => {
+
+            const sessionFixture = await SessionFixture.getInstance();
+
+            await request(app).post("/cards")
+                .set('Authorization', `Bearer ${sessionFixture.session_user_admin?.token}`)
+                .attach("image", filePath)
+                .field("deckId", 1)
+                .field("cardAssociateId", 3)
+                .expect(400)
+        })
+
+        it('should create a card with no card Associate and an image', async () => {
 
             const sessionFixture = await SessionFixture.getInstance();
 
@@ -30,14 +73,37 @@ describe("Determine the card routes behavior", () => {
                 .field("deckId", 1)
                 .expect(201)
         })
-
-        it('should create a card with a card Associate', async () => {
+        it('should create a card with a card Associate and an image', async () => {
             const sessionFixture = await SessionFixture.getInstance();
 
             await request(app).post("/cards")
                 .set('Authorization', `Bearer ${sessionFixture.session_user_admin?.token}`)
                 .attach("image", filePath)
                 .field("deckId", 1)
+                .field("cardAssociateId", 2)
+                .expect(201)
+        })
+
+
+        it('should create a card with no card associate and a text', async () => {
+            const sessionFixture = await SessionFixture.getInstance();
+
+            await request(app).post("/cards")
+                .set('Authorization', `Bearer ${sessionFixture.session_user_admin?.token}`)
+                .field("text", "je suis un test")
+                .field("deckId", 1)
+                .field("cardAssociateId", 2)
+                .expect(201)
+        })
+
+        it('should create a card with a card Associate and a text', async () => {
+            const sessionFixture = await SessionFixture.getInstance();
+
+            await request(app).post("/cards")
+                .set('Authorization', `Bearer ${sessionFixture.session_user_admin?.token}`)
+                .field("text", "je suis un test")
+                .field("deckId", 1)
+                .field("cardAssociateId", 2)
                 .expect(201)
         })
     });

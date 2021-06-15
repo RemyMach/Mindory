@@ -6,7 +6,8 @@ import {DeckFixture} from "./deck.fixture";
 
 export class CardFixture implements fixture{
 
-    card_no_associate?: CardInstance;
+    card_no_associate_1?: CardInstance;
+    card_no_associate_2?: CardInstance;
     card_associate_1?: CardInstance;
     card_associate_2?: CardInstance;
 
@@ -27,7 +28,10 @@ export class CardFixture implements fixture{
         const deckFixture = await DeckFixture.getInstance();
 
         await Promise.all([
-            this.card_no_associate = await manager.card.create({
+            this.card_no_associate_1 = await manager.card.create({
+                image: "src/assets/upload/python.png"
+            }),
+            this.card_no_associate_2 = await manager.card.create({
                 image: "src/assets/upload/python.png"
             }),
             this.card_associate_1 = await manager.card.create({
@@ -39,7 +43,8 @@ export class CardFixture implements fixture{
         ]);
 
         await Promise.all([
-            this.card_no_associate?.setDeck(deckFixture.deck_python),
+            this.card_no_associate_1?.setDeck(deckFixture.deck_python),
+            this.card_no_associate_2?.setDeck(deckFixture.deck_python),
             this.card_associate_1?.setDeck(deckFixture.deck_python),
             this.card_associate_2?.setDeck(deckFixture.deck_python),
             this.card_associate_1?.setCardAssociate(this.card_associate_2),
