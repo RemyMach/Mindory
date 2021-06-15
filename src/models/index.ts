@@ -46,7 +46,7 @@ export class SequelizeManager implements SequelizeManagerProps {
             username: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             port: Number.parseInt(process.env.DB_PORT as string),
-            logging: false
+            logging: true
         });
         await sequelize.authenticate();
         const managerProps: SequelizeManagerProps = {
@@ -75,7 +75,7 @@ export class SequelizeManager implements SequelizeManagerProps {
         props.user.hasMany(props.passwordReset);
         props.passwordReset.belongsTo(props.user,{foreignKey: 'user_id'});
 
-        props.card.belongsTo(props.card, {foreignKey: 'card_associate_id'});
+        props.card.belongsTo(props.card, {foreignKey: 'card_associate_id', as: 'cardAssociate'});
         props.deck.hasMany(props.card);
         props.card.belongsTo(props.deck, {foreignKey: 'deck_id'});
     }

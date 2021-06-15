@@ -37,15 +37,18 @@ export class CardController {
         });
 
         if(props.cardAssociate)
-            await Promise.all([card.setCard(props.cardAssociate), card.setDeck(props.deck)]);
+            await Promise.all([
+                card.setCardAssociate(props.cardAssociate),
+                card.setDeck(props.deck),
+                props.cardAssociate.setCardAssociate(card)]);
         else
             await card.setDeck(props.deck);
 
         return card;
     }
 
-    public async getCardIfAvailable(cardAssociateId: number): Promise<CardInstance | null> {
-        return await CardRepository.getCardIfNotAlreadyPairedWithAnOther(cardAssociateId);
+    public async getCardIfAvailableAndInTheSameDeck(cardAssociateId: number, deck: DeckInstance): Promise<CardInstance | null> {
+        return await CardRepository.getCardIfNotAlreadyPairedWithAnOther(cardAssociateId, deck);
     }
 
 

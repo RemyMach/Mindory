@@ -109,3 +109,6 @@ dist
 /config/test.env
 .DS_Store
 
+!src/assets/upload/python.png
+src/assets/upload/**
+

@@ -24,7 +24,10 @@ cardRouter.post("/",[
     ],
     async function(req: Request, res: Response) {
 
-        const image = req.file.filename;
+        let image: string | undefined;
+        if(req.file)
+            image = req.file.filename;
+
         const { text, deckId, cardAssociateId } = req.body;
 
         if(image === undefined && text === undefined)
@@ -42,14 +45,15 @@ cardRouter.post("/",[
 
         let cardAssociate: CardInstance |  null = null;
         if(cardAssociateId) {
-            cardAssociate = await cardController.getCardIfAvailable(cardAssociateId);
+            cardAssociate = await cardController.getCardIfAvailableAndInTheSameDeck(cardAssociateId, deck);
             if(cardAssociate === null)
-                throw new BasicError("the card associate doesn't exist or is already paired with an other card");
+                throw new BasicError("the card associate doesn't exist in this deck or is already paired with an other card");
         }
 
-        const card = cardController.createCard({image, text, deck, cardAssociate})
+        const card = await cardController.createCard({image, text, deck, cardAssociate});
 
-        return res.status(201).json(card).send().end();
+
+        return res.status(201).json({text: card?.text, image: card?.image}).send().end();
 });
 
 export {

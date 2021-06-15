@@ -29,8 +29,8 @@ export interface CardCreationProps extends Optional<CardProps, "id"> {}
 
 export interface CardInstance extends Model<CardProps, CardCreationProps>, CardProps {
 
-    setCard: BelongsToSetAssociationMixin<CardInstance, "id">;
-    getCard: BelongsToGetAssociationMixin<CardInstance>;
+    setCardAssociate: BelongsToSetAssociationMixin<CardInstance, "id">;
+    getCardAssociate: BelongsToGetAssociationMixin<CardInstance>;
 
     setDeck: BelongsToSetAssociationMixin<DeckInstance, "id">;
     getDeck: BelongsToGetAssociationMixin<DeckInstance>;
@@ -44,7 +44,7 @@ export default function(sequelize: Sequelize): ModelCtor<CardInstance> {
             autoIncrement: true
         },
         text: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: true,
         },
         image: {

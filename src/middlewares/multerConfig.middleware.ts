@@ -12,12 +12,18 @@ export class MulterConfigMiddleware{
         'image/png': 'png'
     };
 
+    static MIME_TYPES_POSSIBLY_PRESENT_IN_NAME_FILE: string[] = [
+        "jpg", "jpeg", "png"
+    ];
+
     static storage = diskStorage({
         destination: ((req, file, callback) => {
             callback(null, 'src/assets/upload');
         }),
         filename(req, file: Express.Multer.File, callback: (error: (Error | null), filename: string) => void) {
-            const name = file.originalname.split(' ').join('-');
+            let name = file.originalname.split(' ').join('-');
+            const extensionFormatedForRemove = new RegExp('.{1}(' + MulterConfigMiddleware.MIME_TYPES_POSSIBLY_PRESENT_IN_NAME_FILE.join('|') + ')', 'gm');
+            name = name.replace(extensionFormatedForRemove, '');
             const extension = MulterConfigMiddleware.MIME_TYPES_ACCEPTED[file.mimetype];
             callback(null, name + Date.now() + '.' + extension);
         }
