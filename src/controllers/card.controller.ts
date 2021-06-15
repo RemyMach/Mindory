@@ -50,7 +50,4 @@ export class CardController {
     public async getCardIfAvailableAndInTheSameDeck(cardAssociateId: number, deck: DeckInstance): Promise<CardInstance | null> {
         return await CardRepository.getCardIfNotAlreadyPairedWithAnOther(cardAssociateId, deck);
     }
-
-
-
 }

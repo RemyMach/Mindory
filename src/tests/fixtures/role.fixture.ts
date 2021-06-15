@@ -22,19 +22,21 @@ export class RoleFixture implements fixture{
 
     public async fillTable(): Promise<void> {
         const manager = await SequelizeManager.getInstance();
-        
-        this.role_user = await manager.role.create({
-            label: "user"
-        });
-        this.role_admin = await manager.role.create({
-            label: "admin"
-        });
-        this.role_test_delete = await manager.role.create({
-            label: "test_delete"
-        });
-        this.role_test_update = await manager.role.create({
-            label: "test_update"
-        });
+
+        await Promise.all([
+            this.role_user = await manager.role.create({
+                label: "user"
+            }),
+            this.role_admin = await manager.role.create({
+                label: "admin"
+            }),
+            this.role_test_delete = await manager.role.create({
+                label: "test_delete"
+            }),
+            this.role_test_update = await manager.role.create({
+                label: "test_update"
+            })
+        ])
     }
 
     public async destroyFieldsTable(): Promise<void> {

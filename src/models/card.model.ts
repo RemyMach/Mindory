@@ -2,24 +2,21 @@ import {
     BelongsToGetAssociationMixin,
     BelongsToSetAssociationMixin,
     DataTypes,
-    HasManyGetAssociationsMixin,
     Model,
     ModelCtor,
     Optional,
     Sequelize
 } from "sequelize";
-import {UserInstance} from "./user.model";
 import {DeckInstance} from "./deck.model";
-import {RoleInstance} from "./role.model";
 
 export interface CardProps {
     id: number;
-    text: string;
-    image: string;
+    text?: string;
+    image?: string;
 }
 
 export interface cardCreateOption {
-    text?: string;
+    text?: string | null;
     image?: string;
     deck: DeckInstance;
     cardAssociate: CardInstance | null;

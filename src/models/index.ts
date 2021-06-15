@@ -46,7 +46,7 @@ export class SequelizeManager implements SequelizeManagerProps {
             username: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             port: Number.parseInt(process.env.DB_PORT as string),
-            logging: true
+            logging: false
         });
         await sequelize.authenticate();
         const managerProps: SequelizeManagerProps = {
