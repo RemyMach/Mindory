@@ -62,6 +62,7 @@ cardRouter.post("/",[
         return res.status(201).json({text: card?.text, image: card?.image}).send().end();
 });
 
+
 export {
     cardRouter
 };

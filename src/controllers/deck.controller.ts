@@ -33,4 +33,9 @@ export class DeckController {
 
         return DeckRepository.getAllCardOfADeck(deck);
     }
+
+    public async getADeckForPlaying(deck: DeckInstance): Promise<DeckInstance | null> {
+        const NUMBER_CARD_FOR_A_GAME = 30;
+        return DeckRepository.getADeckForPlaying(deck, NUMBER_CARD_FOR_A_GAME);
+    }
 }

@@ -34,6 +34,28 @@ deckRouter.get("/:deckId",[
         return res.status(200).json(deckFinal).send().end();
 });
 
+deckRouter.get("/play/:deckId",[
+        param("deckId").exists()
+            .withMessage("you have to provide a valid deckId")
+    ],
+    async function(req: Request, res: Response) {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) {
+
+            throw new InvalidInput(errors);
+        }
+
+        const { deckId } = req.params;
+        const deckController = await DeckController.getInstance();
+        const deck = await deckController.deck.findByPk(deckId);
+        if(deck === null)
+            throw new BasicError("the Deck doesn't exist");
+
+        const deckFinal = await deckController.getADeckForPlaying(deck);
+
+        return res.status(200).json(deckFinal).send().end();
+    });
+
 export {
     deckRouter
 };
