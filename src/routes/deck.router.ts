@@ -1,4 +1,4 @@
-import {body, param, validationResult} from "express-validator";
+import {body, param, query, validationResult} from "express-validator";
 import {adminAuthMiddleware} from "../middlewares/auth.middleware";
 import {MulterConfigMiddleware} from "../middlewares/multerConfig.middleware";
 import express, {Request, Response} from "express";
@@ -43,6 +43,32 @@ deckRouter.post("/",
 
         return res.status(201).json(deck).send().end();
     });
+
+deckRouter.get("/all",[
+        query("offset").isNumeric().optional()
+            .withMessage("you have to provide a valid offset"),
+        query("limit").isNumeric().isInt({lt: 25}).optional()
+            .withMessage("you have to provide a valid limit")
+    ],
+    async function(req: Request, res: Response) {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) {
+
+            throw new InvalidInput(errors);
+        }
+
+        const offset = req.query.offset ? Number.parseInt(req.query.offset as string) : 0;
+        const limit = req.query.limit ? Number.parseInt(req.query.limit as string) : 25;
+
+        const deckController = await DeckController.getInstance();
+        const decks = await deckController.deck.findAll({
+            attributes: ["id", "title", "image"],
+            offset,
+            limit
+        });
+
+        return res.status(200).json(decks).send().end();
+});
 
 deckRouter.get("/:deckId",[
         param("deckId").exists()
