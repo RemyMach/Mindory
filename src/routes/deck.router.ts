@@ -67,7 +67,7 @@ deckRouter.get("/all",[
             limit
         });
 
-        return res.status(200).json(decks).send().end();
+        return res.status(200).json(decks).end();
 });
 
 deckRouter.get("/:deckId",[
