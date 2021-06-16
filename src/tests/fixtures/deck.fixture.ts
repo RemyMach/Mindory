@@ -27,12 +27,15 @@ export class DeckFixture implements fixture{
 
         await Promise.all([
             this.deck_python = await manager.deck.create({
+                image: "python.png",
                 title: "Python"
             }),
             this.deck_linux = await manager.deck.create({
+                image: "logo-linux.png",
                 title: "Linux"
             }),
             this.deck_html = await manager.deck.create({
+                image: "html-5.png",
                 title: "html"
             })
         ])

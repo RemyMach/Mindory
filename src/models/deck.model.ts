@@ -4,6 +4,7 @@ import {UserInstance} from "./user.model";
 export interface DeckProps {
     id: number;
     title: string;
+    image: string;
 }
 
 export interface DeckCreationProps extends Optional<DeckProps, "id"> {}
@@ -19,6 +20,10 @@ export default function(sequelize: Sequelize): ModelCtor<DeckInstance> {
             autoIncrement: true
         },
         title: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        image: {
             type: DataTypes.STRING,
             allowNull: false,
         }

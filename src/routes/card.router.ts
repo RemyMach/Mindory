@@ -14,14 +14,15 @@ import {CardRepository} from "../repositories/card.repository";
 const cardRouter = express.Router();
 
 
-cardRouter.post("/",[
+cardRouter.post("/",
+    adminAuthMiddleware,
+    MulterConfigMiddleware.upload.single('image'),
+    [
         body("deckId").exists().isNumeric()
             .withMessage("you have to provide the deck associate to the card"),
         body("cardAssociateId").exists().isNumeric().optional()
             .withMessage("you have to filled a valid other card id"),
 
-        adminAuthMiddleware,
-        MulterConfigMiddleware.upload.single('image')
     ],
     async function(req: Request, res: Response) {
         const errors = validationResult(req).array();
@@ -35,7 +36,8 @@ cardRouter.post("/",[
             image = req.file.filename;
 
         const { text, deckId, cardAssociateId } = req.body;
-
+        console.log(text, deckId, cardAssociateId)
+        console.log(req.file)
         if(image === undefined && text === undefined)
             throw new BasicError("you have to provide text or file");
 

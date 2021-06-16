@@ -36,6 +36,7 @@ export class CardController {
             text: createValues.text
         });
 
+
         if(props.cardAssociate)
             await Promise.all([
                 card.setCardAssociate(props.cardAssociate),
