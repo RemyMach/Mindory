@@ -52,7 +52,6 @@ deckRouter.get("/play/:deckId",[
             throw new BasicError("the Deck doesn't exist");
 
         const deckFinal = await deckController.getADeckForPlaying(deck);
-
         return res.status(200).json(deckFinal).send().end();
     });
 

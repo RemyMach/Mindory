@@ -1,4 +1,4 @@
-import {Express} from "express";
+import express, {Express} from "express";
 import {authRouter} from "./auth.router";
 import {userRouter} from "./user.router";
 import {passwordResetRouter} from "./passwordReset.router";
@@ -11,4 +11,5 @@ export function buildRoutes(app: Express) {
     app.use("/passwordReset", passwordResetRouter);
     app.use("/cards", cardRouter);
     app.use("/decks", deckRouter);
+    app.use(express.static('src/assets/upload'));
 }
