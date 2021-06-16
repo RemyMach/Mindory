@@ -5,6 +5,7 @@ import { cardCreateOption, CardInstance} from "../models/card.model";
 import {DeckInstance} from "../models/deck.model";
 import {CardRepository} from "../repositories/card.repository";
 import {DeckRepository} from "../repositories/deck.repository";
+import BasicError from "../errors/basicError";
 
 export class DeckController {
 
@@ -36,6 +37,39 @@ export class DeckController {
 
     public async getADeckForPlaying(deck: DeckInstance): Promise<DeckInstance | null> {
         const NUMBER_CARD_FOR_A_GAME = 30;
-        return DeckRepository.getADeckForPlaying(deck, NUMBER_CARD_FOR_A_GAME);
+        const deckCards = await DeckRepository.getAllCardOfADeck(deck);
+        if(deckCards === null)
+            throw new BasicError("the deck doesn't exist")
+        const deckJson = JSON.parse(JSON.stringify(deckCards));
+        const cards = deckJson["Cards"]
+        const finalCards = this.selectNumberOfCard(cards, NUMBER_CARD_FOR_A_GAME);
+        console.log(finalCards);
+        return null;
+    }
+    
+    private selectNumberOfCard(cards: any, numberCard: number): any[] {
+        const result = [];
+        const cardKeysInResult: any = {}
+        for(let i = 0; i < Object.keys(cards).length; i++) {
+            if (cards[i]["cardAssociate"] !== null && !cardKeysInResult[cards[i]["id"]]) {
+                result.push(cards[i])
+                result.push(this.getTheAssociateCard(i+1, cards[i]["cardAssociate"]["id"] ,cards));
+                cardKeysInResult[cards[i]['id']] = 1;
+                cardKeysInResult[cards[i]["cardAssociate"]["id"]] = 1;
+            }
+            if(result.length >= numberCard)
+                break;
+        }
+        return result;
+    }
+
+    private getTheAssociateCard(start: number, indexResearch: number, cards: any): JSON {
+
+        for(let i = start; i < Object.keys(cards).length; i++) {
+            if (cards[i]["id"] == indexResearch) {
+                return cards[i];
+            }
+        }
+        return cards;
     }
 }

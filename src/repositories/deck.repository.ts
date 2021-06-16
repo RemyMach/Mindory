@@ -9,6 +9,7 @@ export class DeckRepository {
         const deckController = await DeckController.getInstance();
         return  await deckController.deck.findOne({
             attributes: ['id', 'title'],
+            order: Sequelize.literal('id'),
             where: {
                 id: deck.id
             },
@@ -18,19 +19,18 @@ export class DeckRepository {
                     attributes: ['id', 'image', 'text'],
                     include: [{
                         model: deckController.card,
-                        attributes: ['id'],
+                        attributes: ['id', 'image', 'text'],
                         as: "cardAssociate"
                     }]
                 }]
         });
     }
 
-    public static async getADeckForPlaying(deck: DeckInstance, numberOfCard: number): Promise<DeckInstance | null> {
+    public static async getADeckForPlaying(deck: DeckInstance): Promise<DeckInstance | null> {
         const deckController = await DeckController.getInstance();
         return  await deckController.deck.findOne({
             attributes: ['id', 'title'],
             order: Sequelize.literal('rand()'),
-            limit: numberOfCard,
             where: {
                 id: deck.id
             },
