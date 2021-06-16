@@ -6,6 +6,7 @@ import {DeckInstance} from "../models/deck.model";
 import {CardRepository} from "../repositories/card.repository";
 import {DeckRepository} from "../repositories/deck.repository";
 import BasicError from "../errors/basicError";
+import {shuffleArray} from "../utils/array/shuffle";
 
 export class DeckController {
 
@@ -42,9 +43,8 @@ export class DeckController {
             throw new BasicError("the deck doesn't exist")
         const deckJson = JSON.parse(JSON.stringify(deckCards));
         const cards = deckJson["Cards"]
-        const finalCards = this.selectNumberOfCard(cards, NUMBER_CARD_FOR_A_GAME);
-        console.log(finalCards);
-        return null;
+        deckJson["Cards"] = this.selectNumberOfCard(cards, NUMBER_CARD_FOR_A_GAME);
+        return deckJson;
     }
     
     private selectNumberOfCard(cards: any, numberCard: number): any[] {
@@ -60,6 +60,8 @@ export class DeckController {
             if(result.length >= numberCard)
                 break;
         }
+
+        shuffleArray(result);
         return result;
     }
 
