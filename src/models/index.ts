@@ -7,6 +7,7 @@ import passwordResetCreator, {PasswordResetInstance} from "./passwordReset.model
 import cardCreator, {CardInstance} from "./card.model";
 import deckCreator, {DeckInstance} from "./deck.model";
 import partCreator, {PartInstance} from "./part.model";
+import shotCreator, {ShotInstance} from "./shot.model";
 
 
 export interface SequelizeManagerProps {
@@ -17,7 +18,8 @@ export interface SequelizeManagerProps {
     passwordReset: ModelCtor<PasswordResetInstance>;
     card: ModelCtor<CardInstance>;
     deck: ModelCtor<DeckInstance>;
-    part: ModelCtor<PartInstance>
+    part: ModelCtor<PartInstance>;
+    shot: ModelCtor<ShotInstance>;
 }
 
 export class SequelizeManager implements SequelizeManagerProps {
@@ -32,6 +34,7 @@ export class SequelizeManager implements SequelizeManagerProps {
     card: ModelCtor<CardInstance>;
     deck: ModelCtor<DeckInstance>;
     part: ModelCtor<PartInstance>;
+    shot: ModelCtor<ShotInstance>;
 
 
     public static async getInstance(): Promise<SequelizeManager> {
@@ -60,7 +63,8 @@ export class SequelizeManager implements SequelizeManagerProps {
             passwordReset: passwordResetCreator(sequelize),
             card: cardCreator(sequelize),
             deck: deckCreator(sequelize),
-            part: partCreator(sequelize)
+            part: partCreator(sequelize),
+            shot: shotCreator(sequelize)
         }
 
         SequelizeManager.associate(managerProps);
@@ -88,6 +92,9 @@ export class SequelizeManager implements SequelizeManagerProps {
 
         props.part.belongsTo(props.deck, {foreignKey: 'deck_id'});
         props.deck.hasMany(props.part);
+
+        props.shot.belongsTo(props.part, {foreignKey: 'part_id'});
+        props.part.hasMany(props.shot);
     }
 
     private constructor(props: SequelizeManagerProps) {
@@ -99,5 +106,6 @@ export class SequelizeManager implements SequelizeManagerProps {
         this.card = props.card;
         this.deck = props.deck;
         this.part = props.part;
+        this.shot = props.shot;
     }
 }

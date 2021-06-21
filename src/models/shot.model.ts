@@ -1,26 +1,26 @@
 import  {DataTypes, HasManyGetAssociationsMixin, Model, ModelCtor, Optional, Sequelize} from "sequelize";
 import {UserInstance} from "./user.model";
 
-export interface PartProps {
+export interface ShotProps {
     id: number;
-    time: number;
+    isValid: number;
 }
 
-export interface PartCreationProps extends Optional<PartProps, "id"> {}
+export interface ShotCreationProps extends Optional<ShotProps, "id"> {}
 
-export interface PartInstance extends Model<PartProps, PartCreationProps>, PartProps {
+export interface ShotInstance extends Model<ShotProps, ShotCreationProps>, ShotProps {
 }
 
-export default function(sequelize: Sequelize): ModelCtor<PartInstance> {
-    return sequelize.define<PartInstance>("Part", {
+export default function(sequelize: Sequelize): ModelCtor<ShotInstance> {
+    return sequelize.define<ShotInstance>("Shot", {
         id: {
             type: DataTypes.BIGINT,
             primaryKey: true,
             autoIncrement: true
         },
-        time: {
-            type: DataTypes.NUMBER,
-            allowNull: true
+        isValid: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false
         }
     }, {
         freezeTableName: true,
