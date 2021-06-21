@@ -6,6 +6,7 @@ import roleCreator, {RoleInstance} from "./role.model";
 import passwordResetCreator, {PasswordResetInstance} from "./passwordReset.model";
 import cardCreator, {CardInstance} from "./card.model";
 import deckCreator, {DeckInstance} from "./deck.model";
+import partCreator, {PartInstance} from "./part.model";
 
 
 export interface SequelizeManagerProps {
@@ -16,6 +17,7 @@ export interface SequelizeManagerProps {
     passwordReset: ModelCtor<PasswordResetInstance>;
     card: ModelCtor<CardInstance>;
     deck: ModelCtor<DeckInstance>;
+    part: ModelCtor<PartInstance>
 }
 
 export class SequelizeManager implements SequelizeManagerProps {
@@ -29,6 +31,7 @@ export class SequelizeManager implements SequelizeManagerProps {
     passwordReset: ModelCtor<PasswordResetInstance>;
     card: ModelCtor<CardInstance>;
     deck: ModelCtor<DeckInstance>;
+    part: ModelCtor<PartInstance>;
 
 
     public static async getInstance(): Promise<SequelizeManager> {
@@ -56,7 +59,8 @@ export class SequelizeManager implements SequelizeManagerProps {
             role: roleCreator(sequelize),
             passwordReset: passwordResetCreator(sequelize),
             card: cardCreator(sequelize),
-            deck: deckCreator(sequelize)
+            deck: deckCreator(sequelize),
+            part: partCreator(sequelize)
         }
 
         SequelizeManager.associate(managerProps);
@@ -78,6 +82,12 @@ export class SequelizeManager implements SequelizeManagerProps {
         props.card.belongsTo(props.card, {foreignKey: 'card_associate_id', as: 'cardAssociate'});
         props.deck.hasMany(props.card);
         props.card.belongsTo(props.deck, {foreignKey: 'deck_id'});
+
+        props.part.belongsTo(props.user, {foreignKey: 'user_id'});
+        props.user.hasMany(props.part);
+
+        props.part.belongsTo(props.deck, {foreignKey: 'deck_id'});
+        props.deck.hasMany(props.part);
     }
 
     private constructor(props: SequelizeManagerProps) {
@@ -88,5 +98,6 @@ export class SequelizeManager implements SequelizeManagerProps {
         this.passwordReset = props.passwordReset;
         this.card = props.card;
         this.deck = props.deck;
+        this.part = props.part;
     }
 }
