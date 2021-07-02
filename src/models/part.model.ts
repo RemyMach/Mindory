@@ -19,7 +19,7 @@ export default function(sequelize: Sequelize): ModelCtor<PartInstance> {
             autoIncrement: true
         },
         time: {
-            type: DataTypes.NUMBER,
+            type: DataTypes.INTEGER,
             allowNull: true
         }
     }, {
