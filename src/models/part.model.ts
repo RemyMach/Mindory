@@ -1,5 +1,14 @@
-import  {DataTypes, HasManyGetAssociationsMixin, Model, ModelCtor, Optional, Sequelize} from "sequelize";
+import {
+    BelongsToManyAddAssociationMixin,
+    DataTypes,
+    HasManyGetAssociationsMixin,
+    Model,
+    ModelCtor,
+    Optional,
+    Sequelize
+} from "sequelize";
 import {UserInstance} from "./user.model";
+import {CardInstance} from "./card.model";
 
 export interface PartProps {
     id: number;
@@ -9,6 +18,7 @@ export interface PartProps {
 export interface PartCreationProps extends Optional<PartProps, "id"> {}
 
 export interface PartInstance extends Model<PartProps, PartCreationProps>, PartProps {
+    addCard: BelongsToManyAddAssociationMixin<CardInstance,"Id">
 }
 
 export default function(sequelize: Sequelize): ModelCtor<PartInstance> {

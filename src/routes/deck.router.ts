@@ -8,6 +8,7 @@ import {CardController} from "../controllers/card.controller";
 import {CardInstance} from "../models/card.model";
 import {DeckController} from "../controllers/deck.controller";
 import InvalidInput from "../errors/invalid-input";
+import {PartController} from "../controllers/part.controller";
 
 const deckRouter = express.Router();
 
@@ -111,6 +112,10 @@ deckRouter.get("/play/:deckId",[
             throw new BasicError("the Deck doesn't exist");
 
         const deckFinal = await deckController.getADeckForPlaying(deck);
+        if(deckFinal === null)
+            throw new BasicError("your deck doesn't have enough cards");
+        const partController = await PartController.getInstance();
+        await partController.registerAllCardOfThePart(deckFinal);
         return res.status(200).json(deckFinal).send().end();
     });
 
