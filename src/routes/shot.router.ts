@@ -17,7 +17,7 @@ shotRouter.post("/",
             .withMessage("you have to fill an array of cards to register a shot"),
         body("partId")
             .isNumeric()
-            .withMessage("you have to fill a valid part")
+            .withMessage("you have to fill a valid part"),
     ],
     async function(req: Request, res: Response) {
         const errors = validationResult(req).array();
