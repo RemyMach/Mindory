@@ -1,7 +1,10 @@
 import express from "express";
 import {AuthController} from "../controllers/auth.controller";
 
-export async function authMiddleware(req: express.Request, res: express.Response, next: express.NextFunction) {
+export async function authMiddleware(err: Error, req: express.Request, res: express.Response, next: express.NextFunction) {
+    if(err)
+        return next();
+
     const auth = req.headers["authorization"];
 
     if(auth !== undefined) {
@@ -20,9 +23,9 @@ export async function authMiddleware(req: express.Request, res: express.Response
     }
 }
 
-export async function adminAuthMiddleware(err: Error,req: express.Request, res: express.Response,  next: express.NextFunction) {
+export async function adminAuthMiddleware(err: Error, req: express.Request, res: express.Response,  next: express.NextFunction) {
     if(err)
-        next();
+        return next();
 
     const auth = req.headers["authorization"];
 

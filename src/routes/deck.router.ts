@@ -115,7 +115,7 @@ deckRouter.get("/play/:deckId",[
         if(deckFinal === null)
             throw new BasicError("your deck doesn't have enough cards");
         const partController = await PartController.getInstance();
-        await partController.registerAllCardOfThePart(deckFinal);
+        //await partController.registerAllCardOfThePart(deckFinal);
         return res.status(200).json(deckFinal).send().end();
     });
 

@@ -1,21 +1,20 @@
 import express, {Request, Response} from "express";
-import {authMiddleware} from "../middlewares/auth.middleware";
 import {body, validationResult} from "express-validator";
+import {authMiddleware} from "../middlewares/auth.middleware";
 import InvalidInput from "../errors/invalid-input";
 import {UserController} from "../controllers/user.controller";
 import BasicError from "../errors/basicError";
 import {PartController} from "../controllers/part.controller";
 
+const shotRouter = express.Router();
 
-const partRouter = express.Router();
-
-partRouter.post("/", [
+shotRouter.post("/", [
         body("cardIds")
-            .isArray({min: 29, max: 31})
-            .withMessage("you have to fill an array of cards to begin the part"),
-        body("deckId")
+            .isArray({min: 2, max: 2})
+            .withMessage("you have to fill an array of cards to register a shot"),
+        body("partId")
             .isNumeric()
-            .withMessage("you have to fill a valid id for a deck"),
+            .withMessage("you have to fill a valid part"),
         authMiddleware
     ],
     async function(req: Request, res: Response) {
@@ -32,17 +31,17 @@ partRouter.post("/", [
             throw new BasicError("The user doesn't exist");
         }
 
-        const { cardIds, deckId} = req.body;
-        const partController = await PartController.getInstance();
-        const deck = await partController.deck.findByPk(deckId);
+        const { cardIds, partId} = req.body;
+        //const shotController = await ShotController.getInstance();
+        /*const deck = await partController.deck.findByPk(deckId);
         if(deck === null)
             throw new BasicError("The deck doesn't exist");
 
         const part = await partController.createPart(deck, user, cardIds);
 
-        return res.status(200).json(part).end();
-});
+        return res.status(200).json(part).end();*/
+    });
 
 export {
-    partRouter
+    shotRouter
 }

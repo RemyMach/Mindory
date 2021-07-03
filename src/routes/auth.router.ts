@@ -1,4 +1,4 @@
-import express from "express";
+import express, {Request, Response} from "express";
 import {AuthController} from "../controllers/auth.controller";
 import {authMiddleware} from "../middlewares/auth.middleware";
 import {UserRepository} from "../repositories/user.repository";
@@ -47,7 +47,7 @@ authRouter.post("/subscribe", async function(req, res) {
     }
 });
 
-authRouter.post("/login", async function(req, res) {
+authRouter.post("/login", async function(req: Request, res: Response) {
     const email = req.body.email;
     const password = req.body.password;
     if(email === undefined || password === undefined) {
@@ -68,7 +68,7 @@ authRouter.post("/login", async function(req, res) {
     }
 });
 
-authRouter.delete("/logout", authMiddleware,async function(req, res) {
+authRouter.delete("/logout", authMiddleware,async function(req: Request, res: Response) {
     const auth = req.headers["authorization"];
     if(auth === undefined) {
         res.status(403).end();

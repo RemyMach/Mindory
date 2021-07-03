@@ -87,8 +87,8 @@ export class SequelizeManager implements SequelizeManagerProps {
         props.deck.hasMany(props.card);
         props.card.belongsTo(props.deck, {foreignKey: 'deck_id'});
 
-        props.part.belongsTo(props.user, {foreignKey: 'user_id'});
-        props.user.hasMany(props.part);
+        props.part.belongsToMany(props.user, {through: 'UserPart', foreignKey: 'part_id'});
+        props.user.belongsToMany(props.part, {through: 'UserPart', foreignKey: 'user_id'});
 
         props.part.belongsTo(props.deck, {foreignKey: 'deck_id'});
         props.deck.hasMany(props.part);
