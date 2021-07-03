@@ -9,14 +9,15 @@ import {ShotController} from "../controllers/shot.controller";
 
 const shotRouter = express.Router();
 
-shotRouter.post("/", [
+shotRouter.post("/",
+    [
+        authMiddleware,
         body("cardIds")
             .isArray({min: 2, max: 2})
             .withMessage("you have to fill an array of cards to register a shot"),
         body("partId")
             .isNumeric()
-            .withMessage("you have to fill a valid part"),
-        authMiddleware
+            .withMessage("you have to fill a valid part")
     ],
     async function(req: Request, res: Response) {
         const errors = validationResult(req).array();
@@ -37,6 +38,11 @@ shotRouter.post("/", [
         const part = await shotController.part.findByPk(partId);
         if(part === null)
             throw new BasicError("The part doesn't exist");
+
+        const userIsInThePart = await shotController.verifyIfUserIsInThePart(user, part);
+
+        if(!userIsInThePart)
+            throw new BasicError("The user is not in the part");
 
         const shot = await shotController.createShot(part, user, cardIds);
 

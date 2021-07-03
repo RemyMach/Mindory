@@ -8,6 +8,7 @@ import {performance} from "perf_hooks";
 import {PartInstance} from "../models/part.model";
 import {getCardOfAPLayingDeck} from "../utils/cards/getCardsFromIds";
 import BasicError from "../errors/basicError";
+import {PartRepository} from "../repositories/part.repository";
 
 export class ShotController {
 
@@ -53,6 +54,11 @@ export class ShotController {
         ]);
 
         return shot;
+    }
+
+    public async verifyIfUserIsInThePart(user: UserInstance, part: PartInstance): Promise<boolean> {
+
+        return await PartRepository.getAPartIfTheUserPlayInIt(user, part) !== null;
     }
 
 }

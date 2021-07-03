@@ -1,9 +1,7 @@
-import express from "express";
+import express, {ErrorRequestHandler} from "express";
 import {AuthController} from "../controllers/auth.controller";
 
-export async function authMiddleware(err: Error, req: express.Request, res: express.Response, next: express.NextFunction) {
-    if(err)
-        return next();
+export async function authMiddleware( req: express.Request, res: express.Response, next: express.NextFunction) {
 
     const auth = req.headers["authorization"];
 
@@ -11,6 +9,7 @@ export async function authMiddleware(err: Error, req: express.Request, res: expr
         const token = auth.replace('Bearer ', '');
         const authController = await AuthController.getInstance();
         const session = await authController.getSession(token);
+        console.log(session)
         if(session !== null) {
             next();
             return;
