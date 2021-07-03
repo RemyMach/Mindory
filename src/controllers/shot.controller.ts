@@ -7,47 +7,52 @@ import {ShotInstance} from "../models/shot.model";
 import {performance} from "perf_hooks";
 import {PartInstance} from "../models/part.model";
 import {getCardOfAPLayingDeck} from "../utils/cards/getCardsFromIds";
+import BasicError from "../errors/basicError";
 
-export class PartController {
+export class ShotController {
 
     user: ModelCtor<UserInstance>;
     card: ModelCtor<CardInstance>;
-    deck: ModelCtor<DeckInstance>;
     shot: ModelCtor<ShotInstance>;
     part: ModelCtor<PartInstance>
 
 
-    private static instance: PartController;
+    private static instance: ShotController;
 
-    public static async getInstance(): Promise<PartController> {
-        if (PartController.instance === undefined) {
+    public static async getInstance(): Promise<ShotController> {
+        if (ShotController.instance === undefined) {
             const {user, card, deck, shot, part} = await SequelizeManager.getInstance();
-            PartController.instance = new PartController(user, card, deck, shot, part);
+            ShotController.instance = new ShotController(user, card, deck, shot, part);
         }
-        return PartController.instance;
+        return ShotController.instance;
     }
 
     private constructor(user: ModelCtor<UserInstance>, card: ModelCtor<CardInstance>, deck: ModelCtor<DeckInstance>, shot: ModelCtor<ShotInstance>, part: ModelCtor<PartInstance>) {
         this.user = user;
         this.card = card;
-        this.deck = deck;
         this.shot = shot;
         this.part = part;
     }
 
-    public async createPart(deck: DeckInstance, user: UserInstance, cardIds: number[]): Promise<PartInstance> {
+    public async createShot(part: PartInstance, user: UserInstance, cardIds: number[]): Promise<ShotInstance> {
 
-        const part = await this.part.create();
         const cards = await getCardOfAPLayingDeck(cardIds);
+        const cardAssociate = await cards[0]?.getCardAssociate();
+        if(cardAssociate === undefined)
+            throw new BasicError("The two card are not valid")
+        const isValid = cardAssociate.id === cards[1]?.id;
+        // @ts-ignore
+        const shot = await this.shot.create({isValid});
         await Promise.all([
-            part.addUser(user),
-            part.setDeck(deck),
+            shot.setPart(part),
+            shot.setUser(user),
             cards.map((card: CardInstance | null) => {
                 if(card != null)
-                    part.addCard(card);
+                    shot.addCard(card);
             })
         ]);
 
-        return part;
+        return shot;
     }
+
 }

@@ -1,5 +1,16 @@
-import  {DataTypes, HasManyGetAssociationsMixin, Model, ModelCtor, Optional, Sequelize} from "sequelize";
+import {
+    BelongsToManyAddAssociationMixin, BelongsToSetAssociationMixin,
+    DataTypes,
+    HasManyGetAssociationsMixin,
+    Model,
+    ModelCtor,
+    Optional,
+    Sequelize
+} from "sequelize";
 import {UserInstance} from "./user.model";
+import {CardInstance} from "./card.model";
+import {DeckInstance} from "./deck.model";
+import {PartInstance} from "./part.model";
 
 export interface ShotProps {
     id: number;
@@ -9,6 +20,9 @@ export interface ShotProps {
 export interface ShotCreationProps extends Optional<ShotProps, "id"> {}
 
 export interface ShotInstance extends Model<ShotProps, ShotCreationProps>, ShotProps {
+    addCard: BelongsToManyAddAssociationMixin<CardInstance,"Id">
+    setUser: BelongsToSetAssociationMixin<UserInstance, "id">;
+    setPart: BelongsToSetAssociationMixin<PartInstance, "id">;
 }
 
 export default function(sequelize: Sequelize): ModelCtor<ShotInstance> {
@@ -20,7 +34,8 @@ export default function(sequelize: Sequelize): ModelCtor<ShotInstance> {
         },
         isValid: {
             type: DataTypes.BOOLEAN,
-            allowNull: false
+            allowNull: false,
+            defaultValue: false
         }
     }, {
         freezeTableName: true,

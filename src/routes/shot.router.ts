@@ -5,6 +5,7 @@ import InvalidInput from "../errors/invalid-input";
 import {UserController} from "../controllers/user.controller";
 import BasicError from "../errors/basicError";
 import {PartController} from "../controllers/part.controller";
+import {ShotController} from "../controllers/shot.controller";
 
 const shotRouter = express.Router();
 
@@ -32,14 +33,14 @@ shotRouter.post("/", [
         }
 
         const { cardIds, partId} = req.body;
-        //const shotController = await ShotController.getInstance();
-        /*const deck = await partController.deck.findByPk(deckId);
-        if(deck === null)
-            throw new BasicError("The deck doesn't exist");
+        const shotController = await ShotController.getInstance();
+        const part = await shotController.part.findByPk(partId);
+        if(part === null)
+            throw new BasicError("The part doesn't exist");
 
-        const part = await partController.createPart(deck, user, cardIds);
+        const shot = await shotController.createShot(part, user, cardIds);
 
-        return res.status(200).json(part).end();*/
+        return res.status(200).json(shot).end();
     });
 
 export {
