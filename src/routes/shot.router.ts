@@ -18,6 +18,9 @@ shotRouter.post("/",
         body("partId")
             .isNumeric()
             .withMessage("you have to fill a valid part"),
+        body("time")
+            .isNumeric()
+            .withMessage("you have to fill a valid chronometer value"),
     ],
     async function(req: Request, res: Response) {
         const errors = validationResult(req).array();
@@ -33,7 +36,7 @@ shotRouter.post("/",
             throw new BasicError("The user doesn't exist");
         }
 
-        const { cardIds, partId} = req.body;
+        const { cardIds, partId, time } = req.body;
         const shotController = await ShotController.getInstance();
         const part = await shotController.part.findByPk(partId);
         if(part === null)
@@ -44,7 +47,11 @@ shotRouter.post("/",
         if(!userIsInThePart)
             throw new BasicError("The user is not in the part");
 
-        const shot = await shotController.createShot(part, user, cardIds);
+        const shot = await shotController.createShot(part, user, cardIds, time);
+
+        const partController = await PartController.getInstance();
+
+        const thePartIsEnd: boolean = await partController.partIsEnd(part);
 
         return res.status(200).json(shot).end();
     });

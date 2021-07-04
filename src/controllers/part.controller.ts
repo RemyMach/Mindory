@@ -7,6 +7,8 @@ import {ShotInstance} from "../models/shot.model";
 import {performance} from "perf_hooks";
 import {PartInstance} from "../models/part.model";
 import {getCardOfAPLayingDeck} from "../utils/cards/getCardsFromIds";
+import {PartRepository} from "../repositories/part.repository";
+import {CardRepository} from "../repositories/card.repository";
 
 export class PartController {
 
@@ -49,5 +51,17 @@ export class PartController {
         ]);
 
         return part;
+    }
+
+    public async partIsEnd(part: PartInstance): Promise<boolean> {
+        const cardsPlay = await CardRepository.getAllCardsPlayDuringThePart(part);
+        console.log(cardsPlay);
+        if(cardsPlay === null || cardsPlay.length !== 30 )
+            return false;
+
+        const cardsOfThePart = await CardRepository.getAllCardsOfAPart(part);
+
+
+        return true;
     }
 }

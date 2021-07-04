@@ -35,7 +35,7 @@ export class ShotController {
         this.part = part;
     }
 
-    public async createShot(part: PartInstance, user: UserInstance, cardIds: number[]): Promise<ShotInstance> {
+    public async createShot(part: PartInstance, user: UserInstance, cardIds: number[], time: number): Promise<ShotInstance> {
 
         const cards = await getCardOfAPLayingDeck(cardIds);
         const cardAssociate = await cards[0]?.getCardAssociate();
@@ -43,7 +43,7 @@ export class ShotController {
             throw new BasicError("The two card are not valid")
         const isValid = cardAssociate.id === cards[1]?.id;
         // @ts-ignore
-        const shot = await this.shot.create({isValid});
+        const shot = await this.shot.create({isValid, time});
         await Promise.all([
             shot.setPart(part),
             shot.setUser(user),

@@ -15,6 +15,7 @@ import {PartInstance} from "./part.model";
 export interface ShotProps {
     id: number;
     isValid: number;
+    time: number;
 }
 
 export interface ShotCreationProps extends Optional<ShotProps, "id"> {}
@@ -36,6 +37,10 @@ export default function(sequelize: Sequelize): ModelCtor<ShotInstance> {
             type: DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: false
+        },
+        time: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
         }
     }, {
         freezeTableName: true,

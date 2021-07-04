@@ -9,7 +9,6 @@ export async function authMiddleware( req: express.Request, res: express.Respons
         const token = auth.replace('Bearer ', '');
         const authController = await AuthController.getInstance();
         const session = await authController.getSession(token);
-        console.log(session)
         if(session !== null) {
             next();
             return;
