@@ -77,10 +77,10 @@ export class SequelizeManager implements SequelizeManagerProps {
         props.user.hasMany(props.session); // User N Session
         props.session.belongsTo(props.user, {foreignKey: 'user_id'}); // Session 1 User
 
-        props.role.hasMany(props.user); // User N Session
+        props.role.hasMany(props.user, {onDelete: 'CASCADE'}); // User N Session
         props.user.belongsTo(props.role, {foreignKey: 'role_id'}); // Session 1 User
 
-        props.user.hasMany(props.passwordReset);
+        props.user.hasMany(props.passwordReset, {onDelete: 'CASCADE'});
         props.passwordReset.belongsTo(props.user,{foreignKey: 'user_id'});
 
         props.card.belongsTo(props.card, {foreignKey: 'card_associate_id', as: 'cardAssociate'});
@@ -91,19 +91,19 @@ export class SequelizeManager implements SequelizeManagerProps {
         props.user.belongsToMany(props.part, {through: 'UserPart', foreignKey: 'user_id'});
 
         props.part.belongsTo(props.deck, {foreignKey: 'deck_id'});
-        props.deck.hasMany(props.part);
+        props.deck.hasMany(props.part, {onDelete: 'CASCADE'});
 
         props.shot.belongsTo(props.part, {foreignKey: 'part_id'});
-        props.part.hasMany(props.shot);
+        props.part.hasMany(props.shot, {onDelete: 'CASCADE'});
 
         props.shot.belongsTo(props.user, {foreignKey: 'user_id'});
-        props.user.hasMany(props.shot);
+        props.user.hasMany(props.shot, {onDelete: 'CASCADE'});
 
-        props.shot.belongsToMany(props.card, {through: 'CardShot', foreignKey: 'shot_id'});
-        props.card.belongsToMany(props.shot, {through: 'CardShot', foreignKey: 'card_id'});
+        props.shot.belongsToMany(props.card, {through: 'CardShot', foreignKey: 'shot_id', onDelete: 'CASCADE'});
+        props.card.belongsToMany(props.shot, {through: 'CardShot', foreignKey: 'card_id', onDelete: 'CASCADE'});
 
-        props.card.belongsToMany(props.part, {through: 'CardPart', foreignKey: 'card_id'});
-        props.part.belongsToMany(props.card, {through: 'CardPart', foreignKey: 'part_id'});
+        props.card.belongsToMany(props.part, {through: 'CardPart', foreignKey: 'card_id', onDelete: 'CASCADE'});
+        props.part.belongsToMany(props.card, {through: 'CardPart', foreignKey: 'part_id', onDelete: 'CASCADE'});
     }
 
     private constructor(props: SequelizeManagerProps) {
