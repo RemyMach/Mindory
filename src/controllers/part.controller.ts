@@ -55,13 +55,44 @@ export class PartController {
 
     public async partIsEnd(part: PartInstance): Promise<boolean> {
         const cardsPlay = await CardRepository.getAllCardsPlayDuringThePart(part);
-        console.log(cardsPlay);
         if(cardsPlay === null || cardsPlay.length !== 30 )
             return false;
 
         const cardsOfThePart = await CardRepository.getAllCardsOfAPart(part);
+        if(cardsOfThePart === null)
+            return false;
 
+        return this.cardsPlayAreTheSameThanCardsPart(cardsPlay, cardsOfThePart);
+    }
+
+    private cardsPlayAreTheSameThanCardsPart(cardsPlay: CardInstance[], cardsOfThePart: CardInstance[]): boolean {
+        let cardsPlayIds = new Map<number, number>();
+        for (let card of cardsPlay) {
+            if(!cardsPlayIds.has(card.id))
+                cardsPlayIds.set(card.id, 1);
+            else
+                cardsPlayIds.set(card.id, cardsPlayIds.get(card.id)! + 1);
+        }
+
+        if(cardsPlayIds.size !== 30)
+            return false;
+
+        for (let card of cardsOfThePart) {
+            if(cardsPlayIds.has(card.id))
+                cardsPlayIds.set(card.id, cardsPlayIds.get(card.id)! - 1);
+        }
+
+        for (let value of Array.from(cardsPlayIds.values())) {
+            if(value != 0)
+                return false;
+        }
 
         return true;
+
+    }
+
+    public async registerTheEndOfThePart(part: PartInstance, time: number,): Promise<void> {
+
+        await part.update({time});
     }
 }

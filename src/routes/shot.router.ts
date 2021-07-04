@@ -53,6 +53,9 @@ shotRouter.post("/",
 
         const thePartIsEnd: boolean = await partController.partIsEnd(part);
 
+        if(thePartIsEnd)
+            await partController.registerTheEndOfThePart(part, time);
+
         return res.status(200).json(shot).end();
     });
 
