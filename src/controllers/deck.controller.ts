@@ -74,4 +74,23 @@ export class DeckController {
         }
         return cards;
     }
+
+    public async filterDayByCardsNumber(decks: DeckInstance[], minCard: number):Promise<DeckInstance[]> {
+
+        if(minCard === 0)
+            return decks;
+
+        const finalDecks: DeckInstance[] = [];
+        const cards = await Promise.all<CardInstance[]>(
+            decks.map((deck: DeckInstance) => deck.getCards())
+        )
+
+        for(let id in cards){
+            if(cards[id].length >= minCard)
+                finalDecks.push(decks[id]);
+        }
+
+        return finalDecks;
+
+    }
 }
