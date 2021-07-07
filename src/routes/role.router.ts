@@ -14,7 +14,7 @@ roleRouter.get("/", adminAuthMiddleware, async function(req: Request, res: Respo
 
     const json = JSON.parse(JSON.stringify(user));
 
-    return res.status(200).json({role_label: json.Role.label}).end();
+    return res.status(200).json(json.Role.label).end();
 });
 
 export {
