@@ -6,6 +6,7 @@ import {cardRouter} from "./card.router";
 import {deckRouter} from "./deck.router";
 import {partRouter} from "./part.router";
 import {shotRouter} from "./shot.router";
+import {roomRouter} from "./room.router";
 
 export function buildRoutes(app: Express) {
     app.use("/auth", authRouter);
@@ -15,5 +16,6 @@ export function buildRoutes(app: Express) {
     app.use("/decks", deckRouter);
     app.use("/parts", partRouter);
     app.use("/shots", shotRouter);
+    app.use("/rooms", roomRouter);
     app.use(express.static('src/assets/upload'));
 }

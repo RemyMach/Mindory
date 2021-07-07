@@ -15,7 +15,7 @@ import {PartInstance} from "./part.model";
 export interface RoomProps {
     id: number;
     token: string;
-    keyword: string;
+    keyword?: string;
 }
 
 export interface RoomCreationProps extends Optional<RoomProps, "id"> {}

@@ -38,8 +38,8 @@ app.get('/socket', (req, res) => {
 });
 
 
-io.on('connection', (socket: Socket) => {
-    console.log(`${socket.client.request} user is connected`)
+io.on('connection', (socket: any) => {
+    console.log(`${socket} user is connected`)
 });
 
 export {

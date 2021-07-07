@@ -6,7 +6,7 @@ import {Secret, sign, verify} from 'jsonwebtoken';
 import {SessionInstance} from "../models/session.model";
 import {PasswordResetInstance} from "../models/passwordReset.model";
 import {PasswordResetRepository} from "../repositories/passwordReset.repository";
-import {generateEmailVerificationToken} from "../utils/password_reset/password_reset";
+import {generateToken} from "../utils/password_reset/password_reset";
 
 export class PasswordResetController {
 
@@ -44,7 +44,7 @@ export class PasswordResetController {
     public async createPasswordReset(user: UserInstance): Promise<PasswordResetInstance | null> {
         let passwordReset : PasswordResetInstance;
         try {
-            const token = generateEmailVerificationToken();
+            const token = generateToken();
             passwordReset = await this.passwordReset.create({
                 token
             });
