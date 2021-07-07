@@ -8,6 +8,8 @@ import cardCreator, {CardInstance} from "./card.model";
 import deckCreator, {DeckInstance} from "./deck.model";
 import partCreator, {PartInstance} from "./part.model";
 import shotCreator, {ShotInstance} from "./shot.model";
+import roomCreator ,{RoomInstance} from "./room.model";
+import userSocketCreator, {UserSocketInstance} from "./userSocket.model";
 
 
 export interface SequelizeManagerProps {
@@ -20,6 +22,8 @@ export interface SequelizeManagerProps {
     deck: ModelCtor<DeckInstance>;
     part: ModelCtor<PartInstance>;
     shot: ModelCtor<ShotInstance>;
+    room: ModelCtor<RoomInstance>;
+    userSocket: ModelCtor<UserSocketInstance>
 }
 
 export class SequelizeManager implements SequelizeManagerProps {
@@ -35,6 +39,8 @@ export class SequelizeManager implements SequelizeManagerProps {
     deck: ModelCtor<DeckInstance>;
     part: ModelCtor<PartInstance>;
     shot: ModelCtor<ShotInstance>;
+    room: ModelCtor<RoomInstance>;
+    userSocket: ModelCtor<UserSocketInstance>
 
 
     public static async getInstance(): Promise<SequelizeManager> {
@@ -64,11 +70,13 @@ export class SequelizeManager implements SequelizeManagerProps {
             card: cardCreator(sequelize),
             deck: deckCreator(sequelize),
             part: partCreator(sequelize),
-            shot: shotCreator(sequelize)
+            shot: shotCreator(sequelize),
+            room: roomCreator(sequelize),
+            userSocket: userSocketCreator(sequelize)
         }
 
         SequelizeManager.associate(managerProps);
-        await sequelize.sync();
+        await sequelize.sync({force: true});
         return new SequelizeManager(managerProps);
     }
 
@@ -104,6 +112,15 @@ export class SequelizeManager implements SequelizeManagerProps {
 
         props.card.belongsToMany(props.part, {through: 'CardPart', foreignKey: 'card_id', onDelete: 'CASCADE'});
         props.part.belongsToMany(props.card, {through: 'CardPart', foreignKey: 'part_id', onDelete: 'CASCADE'});
+
+        props.room.hasMany(props.userSocket, {onDelete: 'CASCADE'});
+        props.userSocket.belongsTo(props.room, {foreignKey: 'room_id'});
+
+        props.room.belongsTo(props.part, {foreignKey: 'part_id'});
+        props.part.hasMany(props.room, {onDelete: 'CASCADE'});
+
+        props.user.hasMany(props.userSocket, {onDelete: 'CASCADE'});
+        props.userSocket.belongsTo(props.user, {foreignKey: 'user_id'});
     }
 
     private constructor(props: SequelizeManagerProps) {
@@ -116,5 +133,7 @@ export class SequelizeManager implements SequelizeManagerProps {
         this.deck = props.deck;
         this.part = props.part;
         this.shot = props.shot;
+        this.room = props.room;
+        this.userSocket = props.userSocket;
     }
 }
