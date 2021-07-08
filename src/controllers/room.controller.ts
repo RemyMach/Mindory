@@ -61,4 +61,12 @@ export class RoomController {
 
         await RoomRepository.destroyRooms(rooms);
     }
+
+    public async getRoomUpForAUser(user: UserInstance): Promise<RoomInstance[] | null> {
+        return await RoomRepository.getAllRoomForAUser(user);
+    }
+
+    public async updateRoomKeyWord(room: RoomInstance, keyWord: string): Promise<void> {
+        await RoomRepository.updateKeyWord(room, keyWord);
+    }
 }

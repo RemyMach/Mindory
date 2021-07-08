@@ -1,4 +1,5 @@
 import {
+    BelongsToGetAssociationMixin,
     BelongsToManyAddAssociationMixin, BelongsToSetAssociationMixin,
     DataTypes,
     HasManyGetAssociationsMixin,
@@ -23,6 +24,7 @@ export interface RoomCreationProps extends Optional<RoomProps, "id"> {}
 export interface RoomInstance extends Model<RoomProps, RoomCreationProps>, RoomProps {
 
     addUser: BelongsToManyAddAssociationMixin<UserInstance, "id">;
+    getPart: BelongsToGetAssociationMixin<PartInstance>;
     setPart: BelongsToSetAssociationMixin<PartInstance, "id">;
 }
 

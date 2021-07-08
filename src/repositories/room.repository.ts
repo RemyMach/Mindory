@@ -10,7 +10,6 @@ export class RoomRepository {
 
     public static async getAllRoomForAUser(user: UserInstance): Promise<RoomInstance[] | null> {
         const roomController = await RoomController.getInstance();
-        const userController = await UserController.getInstance();
         return await roomController.room.findAll({
             include: [{
                 model: roomController.part,
@@ -29,6 +28,11 @@ export class RoomRepository {
         await Promise.all(
             rooms.map(room => room.destroy())
         );
+    }
+
+    public static async updateKeyWord(room: RoomInstance, keyWord: string): Promise<void> {
+        const roomController = await RoomController.getInstance();
+        await room.update({keyword: keyWord});
     }
 
 }
