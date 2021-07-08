@@ -9,6 +9,7 @@ import {PartInstance} from "../models/part.model";
 import {getCardOfAPLayingDeck} from "../utils/cards/getCardsFromIds";
 import {PartRepository} from "../repositories/part.repository";
 import {CardRepository} from "../repositories/card.repository";
+import {types} from "util";
 
 export class PartController {
 
@@ -37,14 +38,21 @@ export class PartController {
         this.part = part;
     }
 
-    public async createPart(deck: DeckInstance, user: UserInstance, cardIds: number[]): Promise<PartInstance> {
+    public async createPart(deck: DeckInstance, user: UserInstance | null, cardIds: number[] | null = null, cardsInstance: CardInstance[] | null = null): Promise<PartInstance> {
 
         const part = await this.part.create();
-        const cards = await getCardOfAPLayingDeck(cardIds);
+        let cards : (CardInstance | null)[];
+        if(cardIds)
+            cards = await getCardOfAPLayingDeck(cardIds);
+        else if(cardsInstance !== null)
+            cards = cardsInstance;
+
+        if(user !== null)
+            await part.addUser(user);
+
         await Promise.all([
-            part.addUser(user),
             part.setDeck(deck),
-            cards.map((card: CardInstance | null) => {
+            cards!.map((card: CardInstance | null) => {
                 if(card != null)
                     part.addCard(card);
             })
