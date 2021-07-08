@@ -1,5 +1,5 @@
 import express, {Request, Response} from "express";
-import {body, validationResult} from "express-validator";
+import {body, param, validationResult} from "express-validator";
 import {authMiddleware} from "../middlewares/auth.middleware";
 import InvalidInput from "../errors/invalid-input";
 import {UserController} from "../controllers/user.controller";
@@ -82,6 +82,29 @@ roomRouter.get('/', [
     }
     const part = await room[0].getPart();
     return res.status(200).json({id: room[0].id, token: room[0].token, keyword: room[0].keyword, part: {id: part.id} }).end();
+});
+
+roomRouter.get('/token/:token', [
+    param('token')
+        .exists()
+        .withMessage("un token est requis"),
+], async function(req: Request, res: Response) {
+    const errors = validationResult(req).array();
+    if (errors.length > 0) {
+        throw new InvalidInput(errors);
+    }
+
+    const {token} = req.params
+    const roomController = await RoomController.getInstance();
+    const room = await roomController.getRoomByToken(token);
+    if(room == null)
+        throw new BasicError("The token is not valid or to many people use it");
+
+    const roomAvailable = roomController.roomIsAvailableForANewUser(room);
+    if(!roomAvailable)
+        throw new BasicError("The token is not valid or to many people use it");
+
+    return res.status(200).json({is_available: roomAvailable}).end();
 });
 
 roomRouter.put('/', [

@@ -31,8 +31,16 @@ export class RoomRepository {
     }
 
     public static async updateKeyWord(room: RoomInstance, keyWord: string): Promise<void> {
-        const roomController = await RoomController.getInstance();
         await room.update({keyword: keyWord});
+    }
+
+    public static async getRoomByToken(token: string): Promise<RoomInstance | null> {
+        const roomController = await RoomController.getInstance();
+        return await roomController.room.findOne({
+            where: {
+                token
+            }
+        });
     }
 
 }

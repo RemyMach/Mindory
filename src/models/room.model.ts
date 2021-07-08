@@ -1,7 +1,7 @@
 import {
     BelongsToGetAssociationMixin,
     BelongsToManyAddAssociationMixin, BelongsToSetAssociationMixin,
-    DataTypes,
+    DataTypes, HasManyAddAssociationMixin,
     HasManyGetAssociationsMixin,
     Model,
     ModelCtor,
@@ -12,6 +12,8 @@ import {UserInstance} from "./user.model";
 import {CardInstance} from "./card.model";
 import {DeckInstance} from "./deck.model";
 import {PartInstance} from "./part.model";
+import {SessionInstance} from "./session.model";
+import {UserSocketInstance} from "./userSocket.model";
 
 export interface RoomProps {
     id: number;
@@ -24,6 +26,8 @@ export interface RoomCreationProps extends Optional<RoomProps, "id"> {}
 export interface RoomInstance extends Model<RoomProps, RoomCreationProps>, RoomProps {
 
     addUser: BelongsToManyAddAssociationMixin<UserInstance, "id">;
+    addUserSocket: HasManyAddAssociationMixin<UserSocketInstance, "id">;
+    getUserSockets: HasManyGetAssociationsMixin<UserSocketInstance>;
     getPart: BelongsToGetAssociationMixin<PartInstance>;
     setPart: BelongsToSetAssociationMixin<PartInstance, "id">;
 }

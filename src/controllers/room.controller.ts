@@ -69,4 +69,16 @@ export class RoomController {
     public async updateRoomKeyWord(room: RoomInstance, keyWord: string): Promise<void> {
         await RoomRepository.updateKeyWord(room, keyWord);
     }
+
+    public async getRoomByToken(token: string): Promise<RoomInstance | null> {
+        return await RoomRepository.getRoomByToken(token);
+    }
+
+    public async roomIsAvailableForANewUser(room: RoomInstance): Promise<boolean> {
+
+        const userSockets = await room.getUserSockets();
+
+        return userSockets.length <= 1;
+
+    }
 }
