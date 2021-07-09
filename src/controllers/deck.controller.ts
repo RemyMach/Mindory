@@ -93,4 +93,8 @@ export class DeckController {
         return finalDecks;
 
     }
+
+    public async getDeckFromPartId(partId: number): Promise<DeckInstance | null> {
+        return await DeckRepository.getDeckWithCardsFromAPart(partId);
+    }
 }

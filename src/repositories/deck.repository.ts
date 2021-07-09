@@ -2,6 +2,8 @@ import {CardInstance} from "../models/card.model";
 import {DeckInstance} from "../models/deck.model";
 import {DeckController} from "../controllers/deck.controller";
 import {Sequelize} from "sequelize";
+import {PartInstance} from "../models/part.model";
+import {PartController} from "../controllers/part.controller";
 
 export class DeckRepository {
 
@@ -45,6 +47,23 @@ export class DeckRepository {
                     }]
                 }]
         });
+    }
+
+    public static async getDeckWithCardsFromAPart(partId: number): Promise<DeckInstance | null> {
+        const deckController = await DeckController.getInstance();
+        const partController = await PartController.getInstance();
+        return await deckController.deck.findOne({
+            include: [{
+                attributes: ['id'],
+                model: partController.part,
+                where: {
+                    id: partId
+                },
+                include: [{
+                    model: partController.card
+                }]
+            }]
+        })
     }
 
 }
