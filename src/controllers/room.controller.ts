@@ -12,6 +12,9 @@ import {PartRepository} from "../repositories/part.repository";
 import {UserSocketInstance} from "../models/userSocket.model";
 import {RoomInstance} from "../models/room.model";
 import {generateToken} from "../utils/password_reset/password_reset";
+import {PasswordResetInstance} from "../models/passwordReset.model";
+import {PasswordResetRepository} from "../repositories/passwordReset.repository";
+import {RoomRepository} from "../repositories/room.repository";
 
 export class RoomController {
 
@@ -19,45 +22,63 @@ export class RoomController {
     part: ModelCtor<PartInstance>;
     userSocket: ModelCtor<UserSocketInstance>;
     room: ModelCtor<RoomInstance>;
+    deck: ModelCtor<DeckInstance>;
 
 
     private static instance: RoomController;
 
     public static async getInstance(): Promise<RoomController> {
         if (RoomController.instance === undefined) {
-            const {user, userSocket, part, room} = await SequelizeManager.getInstance();
-            RoomController.instance = new RoomController(user, userSocket, part, room);
+            const {user, userSocket, part, room, deck} = await SequelizeManager.getInstance();
+            RoomController.instance = new RoomController(user, userSocket, part, room, deck);
         }
         return RoomController.instance;
     }
 
-    private constructor(user: ModelCtor<UserInstance>, userSocket: ModelCtor<UserSocketInstance>, part: ModelCtor<PartInstance>, room: ModelCtor<RoomInstance>) {
+    private constructor(user: ModelCtor<UserInstance>, userSocket: ModelCtor<UserSocketInstance>, part: ModelCtor<PartInstance>, room: ModelCtor<RoomInstance>, deck: ModelCtor<DeckInstance>) {
         this.user = user;
         this.userSocket = userSocket;
         this.part = part;
         this.room = room;
+        this.deck = deck;
     }
 
-    public async createRoom(part: PartInstance, user: UserInstance, cardIds: number[], time: number): Promise<ShotInstance> {
+    public async createRoom(part: PartInstance): Promise<RoomInstance> {
 
         const token = generateToken();
         const room = await this.room.create({token});
+        await room.setPart(part);
 
-        const cardAssociate = await cards[0]?.getCardAssociate();
-        if (cardAssociate === undefined)
-            throw new BasicError("The two card are not valid")
-        const isValid = cardAssociate.id === cards[1]?.id;
-        // @ts-ignore
-        const shot = await this.shot.create({isValid, time});
-        await Promise.all([
-            shot.setPart(part),
-            shot.setUser(user),
-            cards.map((card: CardInstance | null) => {
-                if (card != null)
-                    shot.addCard(card);
-            })
-        ]);
+        return room;
+    }
 
-        return shot;
+
+    public async deleteAllRoomsForAUser(user: UserInstance): Promise<void> {
+
+        const rooms = await RoomRepository.getAllRoomForAUser(user);
+        if(!rooms)
+            return;
+
+        await RoomRepository.destroyRooms(rooms);
+    }
+
+    public async getRoomUpForAUser(user: UserInstance): Promise<RoomInstance[] | null> {
+        return await RoomRepository.getAllRoomForAUser(user);
+    }
+
+    public async updateRoomKeyWord(room: RoomInstance, keyWord: string): Promise<void> {
+        await RoomRepository.updateKeyWord(room, keyWord);
+    }
+
+    public async getRoomByToken(token: string): Promise<RoomInstance | null> {
+        return await RoomRepository.getRoomByToken(token);
+    }
+
+    public async roomIsAvailableForANewUser(room: RoomInstance): Promise<boolean> {
+
+        const userSockets = await room.getUserSockets();
+
+        return userSockets.length <= 1;
+
     }
 }
