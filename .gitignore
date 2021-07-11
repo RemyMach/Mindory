@@ -112,3 +112,4 @@ dist
 !src/assets/upload/python.png
 src/assets/upload/**
 
+.idea

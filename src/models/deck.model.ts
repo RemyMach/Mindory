@@ -1,5 +1,15 @@
-import  {DataTypes, HasManyGetAssociationsMixin, Model, ModelCtor, Optional, Sequelize} from "sequelize";
+import {
+    DataTypes,
+    HasManyAddAssociationMixin,
+    HasManyGetAssociationsMixin,
+    Model,
+    ModelCtor,
+    Optional,
+    Sequelize
+} from "sequelize";
 import {UserInstance} from "./user.model";
+import {SessionInstance} from "./session.model";
+import {CardInstance} from "./card.model";
 
 export interface DeckProps {
     id: number;
@@ -10,6 +20,8 @@ export interface DeckProps {
 export interface DeckCreationProps extends Optional<DeckProps, "id"> {}
 
 export interface DeckInstance extends Model<DeckProps, DeckCreationProps>, DeckProps {
+    addCards: HasManyAddAssociationMixin<CardInstance, "id">;
+    getCards: HasManyGetAssociationsMixin<CardInstance>;
 }
 
 export default function(sequelize: Sequelize): ModelCtor<DeckInstance> {

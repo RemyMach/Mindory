@@ -4,7 +4,6 @@ import 'express-async-errors';
 import {errorHandler} from "./middlewares";
 import BaseCustomError from "./errors/base-custom-error";
 
-
 const app = express();
 
 app.use(express.json());
@@ -19,9 +18,9 @@ app.use(function (req, res, next) {
     next();
 });
 
+
 buildRoutes(app);
 
 app.use(errorHandler);
 
-
-export default app;
+export default app

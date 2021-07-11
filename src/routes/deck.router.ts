@@ -8,6 +8,8 @@ import {CardController} from "../controllers/card.controller";
 import {CardInstance} from "../models/card.model";
 import {DeckController} from "../controllers/deck.controller";
 import InvalidInput from "../errors/invalid-input";
+import {PartController} from "../controllers/part.controller";
+import {Op, Sequelize} from "sequelize";
 
 const deckRouter = express.Router();
 
@@ -48,7 +50,9 @@ deckRouter.get("/all",[
         query("offset").isNumeric().optional()
             .withMessage("you have to provide a valid offset"),
         query("limit").isNumeric().isInt({lt: 25}).optional()
-            .withMessage("you have to provide a valid limit")
+            .withMessage("you have to provide a valid limit"),
+        query("minCard").isNumeric().isInt().optional()
+            .withMessage("you have to provide a valid minCard number")
     ],
     async function(req: Request, res: Response) {
         const errors = validationResult(req).array();
@@ -59,16 +63,20 @@ deckRouter.get("/all",[
 
         const offset = req.query.offset ? Number.parseInt(req.query.offset as string) : 0;
         const limit = req.query.limit ? Number.parseInt(req.query.limit as string) : 25;
+        const minCard = req.query.minCard ? Number.parseInt(req.query.minCard as string) : 0;
 
         const deckController = await DeckController.getInstance();
         const decks = await deckController.deck.findAll({
             attributes: ["id", "title", "image"],
             offset,
-            limit
+            limit,
         });
 
-        return res.status(200).json(decks).end();
+        const finalDecks = await deckController.filterDayByCardsNumber(decks, minCard);
+
+        return res.status(200).json(finalDecks).end();
 });
+
 
 deckRouter.get("/:deckId",[
         param("deckId").exists()
@@ -111,6 +119,10 @@ deckRouter.get("/play/:deckId",[
             throw new BasicError("the Deck doesn't exist");
 
         const deckFinal = await deckController.getADeckForPlaying(deck);
+        if(deckFinal === null)
+            throw new BasicError("your deck doesn't have enough cards");
+        const partController = await PartController.getInstance();
+        //await partController.registerAllCardOfThePart(deckFinal);
         return res.status(200).json(deckFinal).send().end();
     });
 

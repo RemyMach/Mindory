@@ -1,5 +1,6 @@
 import { randomBytes } from 'crypto';
 
-export function generateEmailVerificationToken(): string {
+export function generateToken(): string {
     return randomBytes(32).toString('hex');
 }
+

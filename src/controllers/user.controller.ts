@@ -122,8 +122,6 @@ export class UserController {
 
     public async getUserByToken(token: string): Promise<UserInstance | null> {
 
-        const decoded = verify(token, process.env.JWT_SECRET as Secret);
-
         const user = await UserRepository.getUserByToken(token);
 
         if(user !== null) {
