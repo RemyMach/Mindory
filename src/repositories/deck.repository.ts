@@ -1,4 +1,3 @@
-import {CardInstance} from "../models/card.model";
 import {DeckInstance} from "../models/deck.model";
 import {DeckController} from "../controllers/deck.controller";
 import {Sequelize} from "sequelize";
@@ -47,4 +46,13 @@ export class DeckRepository {
         });
     }
 
+    public static async deleteDeckById(deckId: number): Promise<void>
+    {
+        const deckController = await DeckController.getInstance();
+        await deckController.deck.destroy({
+            where: {
+                id: deckId
+            }
+        });
+    }
 }
