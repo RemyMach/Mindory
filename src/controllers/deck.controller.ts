@@ -50,6 +50,7 @@ export class DeckController {
     private selectNumberOfCard(cards: any, numberCard: number): any[] {
         const result = [];
         const cardKeysInResult: any = {}
+        shuffleArray(cards);
         for(let i = 0; i < Object.keys(cards).length; i++) {
             if (cards[i]["cardAssociate"] !== null && !cardKeysInResult[cards[i]["id"]]) {
                 result.push(cards[i])
@@ -92,5 +93,9 @@ export class DeckController {
 
         return finalDecks;
 
+    }
+
+    public async getDeckFromPartId(partId: number): Promise<DeckInstance | null> {
+        return await DeckRepository.getDeckWithCardsFromAPart(partId);
     }
 }
