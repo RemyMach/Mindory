@@ -76,9 +76,13 @@ export class RoomController {
 
     public async roomIsAvailableForANewUser(room: RoomInstance): Promise<boolean> {
 
-        const userSockets = await room.getUserSockets();
-
-        return userSockets.length <= 1;
-
+        return await this.getUserSocketNumberInARoom(room) <= 1;
     }
+
+    public async getUserSocketNumberInARoom(room: RoomInstance): Promise<number> {
+
+        const userSockets = await room.getUserSockets();
+        return userSockets.length;
+    }
+
 }

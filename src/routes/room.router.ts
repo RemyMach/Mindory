@@ -100,7 +100,7 @@ roomRouter.get('/token/:token', [
     if(room == null)
         throw new BasicError("The token is not valid or to many people use it");
 
-    const roomAvailable = roomController.roomIsAvailableForANewUser(room);
+    const roomAvailable = await roomController.roomIsAvailableForANewUser(room);
     if(!roomAvailable)
         throw new BasicError("The token is not valid or to many people use it");
 
