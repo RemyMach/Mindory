@@ -74,6 +74,11 @@ io.on('connection', async (socket: Socket) => {
         }
     }
 
+    socket.on('cardReturn', async (data) => {
+        console.log('card return');
+        console.log(data);
+    })
+
     socket.on('disconnect', async () => {
         console.log(`${socket.id} user is disconnected`)
         await removeUser(socket.id);

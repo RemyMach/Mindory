@@ -1,3 +1,3 @@
-export function shuffleArray(inputArray: any[]){
-    inputArray.sort(()=> Math.random() - 0.5);
+export function shuffleArray(inputArray: any[]): void{
+    inputArray.sort(() => Math.random() - 0.5);
 }
