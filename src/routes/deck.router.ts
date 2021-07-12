@@ -6,9 +6,9 @@ import BasicError from "../errors/basicError";
 import fs from "fs";
 import {DeckController} from "../controllers/deck.controller";
 import InvalidInput from "../errors/invalid-input";
-import {PartController} from "../controllers/part.controller";
 import {DeckRepository} from "../repositories/deck.repository";
 import {CardRepository} from "../repositories/card.repository";
+import {Sequelize} from "sequelize";
 
 const deckRouter = express.Router();
 
@@ -67,7 +67,7 @@ deckRouter.get("/all", [
 
         const deckController = await DeckController.getInstance();
         const decks = await deckController.deck.findAll({
-            attributes: ["id", "title", "image"],
+            attributes: ["id", "title", "image", [Sequelize.literal('(SELECT COUNT(*) FROM card C WHERE C.deck_id=Deck.id)'), "count"]],
             offset,
             limit,
         });
