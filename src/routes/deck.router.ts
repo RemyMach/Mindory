@@ -123,7 +123,7 @@ deckRouter.get("/play/:deckId",[
             throw new BasicError("your deck doesn't have enough cards");
         const partController = await PartController.getInstance();
         //await partController.registerAllCardOfThePart(deckFinal);
-        return res.status(200).json(deckFinal).send().end();
+        return res.status(200).json(deckFinal).end();
 });
 
 deckRouter.get("/part/:partId",[
@@ -141,10 +141,11 @@ deckRouter.get("/part/:partId",[
         const partId  = Number.parseInt(req.params.partId);
         const deckController = await DeckController.getInstance();
         const deck = await deckController.getDeckFromPartId(partId)
-        if(deck === null)
+        if(deck === null) {
             throw new BasicError("the part doesn't exist");
+        }
 
-        return res.status(200).json(deck).send().end();
+        return res.status(200).json(deck).end();
 });
 
 export {
