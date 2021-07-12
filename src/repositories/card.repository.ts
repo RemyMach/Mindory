@@ -1,15 +1,14 @@
 import {CardInstance} from "../models/card.model";
 import {CardController} from "../controllers/card.controller";
 import {DeckInstance} from "../models/deck.model";
-import {Op} from "sequelize";
 import {PartInstance} from "../models/part.model";
 import {PartController} from "../controllers/part.controller";
 
 export class CardRepository {
 
-    public static async getCardIfNotAlreadyPairedWithAnOther(cardId: number, deck: DeckInstance): Promise<CardInstance| null> {
+    public static async getCardIfNotAlreadyPairedWithAnOther(cardId: number, deck: DeckInstance): Promise<CardInstance | null> {
         const cardController = await CardController.getInstance();
-        const card =  await cardController.card.findOne({
+        const card = await cardController.card.findOne({
             where: {
                 id: cardId
             },
@@ -23,14 +22,14 @@ export class CardRepository {
                 }]
         });
 
-        if(card === null)
+        if (card === null)
             return null;
 
         const cardValid = await card.getCardAssociate();
-        return cardValid ===  null ? card: null;
+        return cardValid === null ? card : null;
     }
 
-    public static async getAllCardsPlayDuringThePart( part: PartInstance): Promise<CardInstance[] | null> {
+    public static async getAllCardsPlayDuringThePart(part: PartInstance): Promise<CardInstance[] | null> {
         const partController = await PartController.getInstance();
         return await partController.card.findAll({
             include: [{
@@ -50,7 +49,7 @@ export class CardRepository {
         });
     }
 
-    public static async getAllCardsOfAPart( part: PartInstance): Promise<CardInstance[] | null> {
+    public static async getAllCardsOfAPart(part: PartInstance): Promise<CardInstance[] | null> {
         const partController = await PartController.getInstance();
         return await partController.card.findAll({
             include: [{
@@ -63,4 +62,12 @@ export class CardRepository {
         });
     }
 
+    public static async deleteCardById(cardId: number): Promise<void> {
+        const cardController = await CardController.getInstance();
+        await cardController.card.destroy({
+            where: {
+                id: cardId
+            }
+        });
+    }
 }
