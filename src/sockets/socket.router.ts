@@ -34,7 +34,6 @@ io.on('connection', async (socket: Socket) => {
         return {error: 'the parameters are not valid'};
 
     const numberOfUser = await getNumberOfUser(roomId);
-    console.log(numberOfUser)
     if(numberOfUser < 2) {
         await addUserToARoom(socket,{id: socket.id, roomId, tokenSession: userToken})
     }
@@ -72,18 +71,28 @@ io.on('connection', async (socket: Socket) => {
     socket.on('pairFound', async (data) => {
         const room = await getRoomOfAUser(socket.id);
         if(room !== null && 'id' in room)
-            socket.broadcast.to(String(room.id)).emit('pairFound', '1')
+            socket.broadcast.to(String(room.id)).emit('pairFoundByOther')
     })
+
+    socket.on('gameFinished', async (data) => {
+        const room = await getRoomOfAUser(socket.id);
+        if(room !== null && 'id' in room) {
+            const otherUser = await getOtherUserInARoom(socket.id, room);
+            if (otherUser.length !== 1)
+                return {error: 'the length is not valid'};
+            socket.broadcast.to(String(room.id)).emit('gameFinished', '')
+        }
+    });
 
     socket.on('disconnect', async () => {
         console.log(`${socket.id} user is disconnected`)
         await removeUser(socket.id);
-    })
+    });
 
     socket.on('disconnectCustom', async () => {
         console.log(`${socket.id} user is disconnected`)
         await removeUser(socket.id);
-    })
+    });
 });
 
 export {
