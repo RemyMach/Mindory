@@ -1,6 +1,6 @@
 import {
     BelongsToManyAddAssociationMixin, BelongsToSetAssociationMixin,
-    DataTypes,
+    DataTypes, HasManyAddAssociationMixin,
     HasManyGetAssociationsMixin,
     Model,
     ModelCtor,
@@ -11,6 +11,7 @@ import {UserInstance} from "./user.model";
 import {CardInstance} from "./card.model";
 import {RoleInstance} from "./role.model";
 import {DeckInstance} from "./deck.model";
+import {ShotInstance} from "./shot.model";
 
 export interface PartProps {
     id: number;
@@ -23,6 +24,8 @@ export interface PartInstance extends Model<PartProps, PartCreationProps>, PartP
     addCard: BelongsToManyAddAssociationMixin<CardInstance,"Id">
     addUser: BelongsToManyAddAssociationMixin<UserInstance, "id">;
     setDeck: BelongsToSetAssociationMixin<DeckInstance, "id">;
+    addShots: HasManyAddAssociationMixin<ShotInstance, "id">;
+    getShots: HasManyGetAssociationsMixin<ShotInstance>;
 }
 
 export default function(sequelize: Sequelize): ModelCtor<PartInstance> {

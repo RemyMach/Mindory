@@ -73,6 +73,12 @@ export class RoomController {
     public async getRoomByToken(token: string): Promise<RoomInstance | null> {
         return await RoomRepository.getRoomByToken(token);
     }
+    public async verifyIfTheRoomHasBeenPlayed(room: RoomInstance): Promise<boolean> {
+        const part = await room.getPart();
+        const shots = await part.getShots();
+        return shots.length > 0;
+
+    }
 
     public async roomIsAvailableForANewUser(room: RoomInstance): Promise<boolean> {
 
