@@ -85,4 +85,8 @@ export class RoomController {
         return userSockets.length;
     }
 
+    public async getRoomOfAUserSocket(userSocket: UserSocketInstance): Promise<RoomInstance | null> {
+        return await userSocket.getRoom();
+    }
+
 }

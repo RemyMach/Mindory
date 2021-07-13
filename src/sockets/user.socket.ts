@@ -4,6 +4,7 @@ import BasicError from "../errors/basicError";
 import {RoomController} from "../controllers/room.controller";
 import {UserSocketController} from "../controllers/userSocket.controller";
 import {Socket} from "socket.io";
+import {RoomInstance} from "../models/room.model";
 
 export interface UserSocket {
     id: string;
@@ -91,9 +92,29 @@ const addUserIntoASocketRoom = (socket: Socket, roomId: number) => {
     socket.join(String(roomId));
 }
 
+const getRoomOfAUser = async (socketId: string) => {
+    const userSocketController = await UserSocketController.getInstance();
+    const roomController = await RoomController.getInstance();
+    const userSocket = await userSocketController.getUserSocketBySocketId(socketId);
+    if(userSocket === null) {
+        return {
+            error: 'userSocket doesn\'t exist'
+        }
+    }
+    return roomController.getRoomOfAUserSocket(userSocket);
+}
+
+const getOtherUserInARoom = async (socketId: string, room: RoomInstance) => {
+    const userSocketController = await UserSocketController.getInstance();
+    return await userSocketController.getOtherUserInARoom(socketId, room);
+
+}
+
 export {
     addUserToARoom,
     removeUser,
     getNumberOfUser,
-    getUserWhoPlayInFirst
+    getUserWhoPlayInFirst,
+    getRoomOfAUser,
+    getOtherUserInARoom
 }

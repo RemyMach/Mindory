@@ -53,4 +53,9 @@ export class UserSocketController {
     public async getAllUserSocketInARoom(room: RoomInstance): Promise<UserSocketInstance[]> {
         return await UserSocketRepository.getAllUserSocketInARoom(room);
     }
+
+    public async getOtherUserInARoom(userSocketId: string, room: RoomInstance): Promise<UserSocketInstance[]> {
+
+        return await UserSocketRepository.getTheOtherUserInARoom(userSocketId, room);
+    }
 }
