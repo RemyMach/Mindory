@@ -1,11 +1,6 @@
 import {ModelCtor} from "sequelize";
 import {UserInstance, UserUpdateOptions, UserUpdatePasswordOptions} from "../models/user.model";
 import {SequelizeManager} from "../models";
-import {RoleInstance} from "../models/role.model";
-import {Secret, verify} from 'jsonwebtoken';
-import {SessionInstance} from "../models/session.model";
-import {UserRepository} from "../repositories/user.repository";
-import {compare} from "bcrypt";
 import {RoomInstance} from "../models/room.model";
 import {UserSocketInstance} from "../models/userSocket.model";
 import {UserSocketRepository} from "../repositories/userSocket.repository";
@@ -52,5 +47,17 @@ export class UserSocketController {
 
     public async getAllUserSocketInARoom(room: RoomInstance): Promise<UserSocketInstance[]> {
         return await UserSocketRepository.getAllUserSocketInARoom(room);
+    }
+
+    public async getOtherUserInARoom(userSocketId: string, room: RoomInstance): Promise<UserSocketInstance[]> {
+
+        return await UserSocketRepository.getTheOtherUserInARoom(userSocketId, room);
+    }
+
+    public async verifiyIfUsersSocketHaveUsers(room: RoomInstance): Promise<boolean> {
+        const usersSocket = await UserSocketRepository.getAllUserSocketInARoom(room);
+        const users = usersSocket.map(async (userSocket) => await userSocket.getUser());
+        return usersSocket.length == 2 && users.every((user) => user !== null);
+
     }
 }
