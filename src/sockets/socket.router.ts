@@ -9,7 +9,7 @@ import {
     getNumberOfUser,
     getUserWhoPlayInFirst,
     getRoomOfAUser,
-    getOtherUserInARoom
+    getOtherUserInARoom, verifyUserAuthentified
 } from './user.socket';
 
 const server = require('http').createServer(app);
@@ -44,7 +44,12 @@ io.on('connection', async (socket: Socket) => {
         userWhoPlayInFirst = await getUserWhoPlayInFirst(roomId);
         if('socketId' in userWhoPlayInFirst){
             console.log(userWhoPlayInFirst);
+            const usersAuthentified = await verifyUserAuthentified(roomId)
             io.to(String(roomId)).emit('userWhoPlayInFirst', (userWhoPlayInFirst.socketId));
+            if(usersAuthentified)
+                io.to(String(roomId)).emit('UsersAreAuthentified', '');
+            else
+                io.to(String(roomId)).emit('UsersAreNotAuthentified', '');
             //socket.emit('userWhoPlayInFirst', (userWhoPlayInFirst.socketId));
         }
     }

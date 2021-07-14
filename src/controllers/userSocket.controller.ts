@@ -53,4 +53,11 @@ export class UserSocketController {
 
         return await UserSocketRepository.getTheOtherUserInARoom(userSocketId, room);
     }
+
+    public async verifiyIfUsersSocketHaveUsers(room: RoomInstance): Promise<boolean> {
+        const usersSocket = await UserSocketRepository.getAllUserSocketInARoom(room);
+        const users = usersSocket.map(async (userSocket) => await userSocket.getUser());
+        return usersSocket.length == 2 && users.every((user) => user !== null);
+
+    }
 }

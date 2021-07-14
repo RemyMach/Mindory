@@ -107,7 +107,14 @@ const getRoomOfAUser = async (socketId: string) => {
 const getOtherUserInARoom = async (socketId: string, room: RoomInstance) => {
     const userSocketController = await UserSocketController.getInstance();
     return await userSocketController.getOtherUserInARoom(socketId, room);
+}
 
+const verifyUserAuthentified = async (roomId: number) => {
+    const userSocketController = await UserSocketController.getInstance();
+    const room = await userSocketController.room.findByPk(roomId);
+    if(room ===  null)
+        return false;
+    return userSocketController.verifiyIfUsersSocketHaveUsers(room);
 }
 
 export {
@@ -116,5 +123,6 @@ export {
     getNumberOfUser,
     getUserWhoPlayInFirst,
     getRoomOfAUser,
-    getOtherUserInARoom
+    getOtherUserInARoom,
+    verifyUserAuthentified
 }

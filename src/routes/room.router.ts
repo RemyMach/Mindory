@@ -99,7 +99,7 @@ roomRouter.get('/token/:token', [
     const room = await roomController.getRoomByToken(token);
     if(room == null)
         throw new BasicError("The token is not valid or to many people use it");
-    if(!await roomController.verifyIfTheRoomHasBeenPlayed(room))
+    if(await roomController.verifyIfTheRoomHasBeenPlayed(room))
         throw new BasicError("The room has been played");
     const roomAvailable = await roomController.roomIsAvailableForANewUser(room);
     if(!roomAvailable)

@@ -76,6 +76,7 @@ export class RoomController {
     public async verifyIfTheRoomHasBeenPlayed(room: RoomInstance): Promise<boolean> {
         const part = await room.getPart();
         const shots = await part.getShots();
+        console.log(shots.length);
         return shots.length > 0;
 
     }
