@@ -58,7 +58,13 @@ export class DeckRepository {
                     id: partId
                 },
                 include: [{
-                    model: partController.card
+                    model: partController.card,
+                    attributes: ['id', 'image', 'text'],
+                    include: [{
+                        model: deckController.card,
+                        attributes: ['id'],
+                        as: "cardAssociate"
+                    }]
                 }]
             }]
         })
