@@ -3,6 +3,7 @@ import {AuthController} from "../controllers/auth.controller";
 import {authMiddleware} from "../middlewares/auth.middleware";
 import {UserRepository} from "../repositories/user.repository";
 import 'express-async-errors';
+import {UserController} from "../controllers/user.controller";
 
 const authRouter = express.Router();
 
@@ -93,6 +94,11 @@ authRouter.delete("/logout", authMiddleware,async function(req: Request, res: Re
         return;
     }
 
+});
+
+authRouter.post("/token", authMiddleware,async function(req: Request, res: Response) {
+
+    return res.status(200).end();
 });
 
 export {
