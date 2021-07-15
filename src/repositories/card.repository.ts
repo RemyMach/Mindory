@@ -3,6 +3,7 @@ import {CardController} from "../controllers/card.controller";
 import {DeckInstance} from "../models/deck.model";
 import {PartInstance} from "../models/part.model";
 import {PartController} from "../controllers/part.controller";
+import {UserInstance} from "../models/user.model";
 
 export class CardRepository {
 
@@ -69,5 +70,48 @@ export class CardRepository {
                 id: cardId
             }
         });
+    }
+
+    public static async getAllValidCardsPlayInAPart(part: PartInstance): Promise<CardInstance[]> {
+        const cardController = await CardController.getInstance();
+        const partController = await PartController.getInstance();
+        return await cardController.card.findAll({
+            include: [{
+                model: partController.shot,
+                where: {
+                    is_valid: 1
+                },
+                include: [{
+                    model: partController.part,
+                    where: {
+                        id: part.id
+                    }
+                }]
+            }]
+        })
+    }
+
+    public static async getAllValidCardsForAUser(part: PartInstance, user: UserInstance): Promise<CardInstance[]> {
+        const cardController = await CardController.getInstance();
+        const partController = await PartController.getInstance();
+        return await cardController.card.findAll({
+            include: [{
+                model: partController.shot,
+                where: {
+                    is_valid: 1
+                },
+                include: [{
+                    model: partController.part,
+                    where: {
+                        id: part.id
+                    }
+                }, {
+                    model: partController.user,
+                    where: {
+                        id: user.id
+                    }
+                }]
+            }]
+        })
     }
 }

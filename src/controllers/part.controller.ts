@@ -111,10 +111,12 @@ export class PartController {
     }
 
     public async userIsAlreadyInPart(user: UserInstance, part: PartInstance): Promise<boolean> {
-        const res = await UserRepository.userIsInPart(part, user);
-        console.log(res)
-        console.log(part.id)
-        console.log(user.name)
-        return res !== null;
+
+        return await UserRepository.userIsInPart(part, user) !== null;
+    }
+
+    public async partIsPlayedByAuthentifiedUsers(part: PartInstance): Promise<boolean> {
+        const users = await part.getUsers();
+        return users.length == 2;
     }
 }

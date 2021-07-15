@@ -1,6 +1,6 @@
-import {body, oneOf, validationResult} from "express-validator";
+import {body, oneOf, param, validationResult} from "express-validator";
 import express, {Request, Response}from "express";
-import {adminAuthMiddleware} from "../middlewares/auth.middleware";
+import {adminAuthMiddleware, authMiddleware} from "../middlewares/auth.middleware";
 import InvalidInput from "../errors/invalid-input";
 import multer, {Multer} from "multer";
 import {MulterConfigMiddleware} from "../middlewares/multerConfig.middleware";
@@ -10,6 +10,9 @@ import BasicError from "../errors/basicError";
 import {CardController} from "../controllers/card.controller";
 import {CardInstance} from "../models/card.model";
 import {CardRepository} from "../repositories/card.repository";
+import {PartController} from "../controllers/part.controller";
+import {UserRepository} from "../repositories/user.repository";
+import {UserController} from "../controllers/user.controller";
 
 const cardRouter = express.Router();
 
@@ -64,6 +67,49 @@ cardRouter.post("/",
         return res.status(201).json({text: card?.text, image: card?.image}).send().end();
 });
 
+cardRouter.get("/parts/:partId/pair",
+    authMiddleware,
+    [
+        param('partId')
+            .exists()
+            .withMessage("une roomId valide est requise"),
+
+    ],
+    async function(req: Request, res: Response) {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) {
+
+            throw new InvalidInput(errors);
+        }
+
+        const userController = await UserController.getInstance();
+        const user = await userController.authenticateUserWithToken(req.headers["authorization"]);
+        if(user === undefined) {
+            return res.status(401).end();
+        }else if (user === null) {
+            throw new BasicError("The user doesn't exist");
+        }
+
+        const { partId } = req.params;
+
+        const partController = await PartController.getInstance();
+        const part = await partController.part.findByPk(partId);
+        if(part === null)
+            throw new BasicError("the part doesn't exist");
+
+        const partPlayedByAuthentifiedUsers = await partController.partIsPlayedByAuthentifiedUsers(part);
+        if(!partPlayedByAuthentifiedUsers)
+            return res.status(201).json({error: "no authentified users"}).end();
+
+        const cardController = await CardController.getInstance();
+
+        const cards = await cardController.getAllCardsValidFromThePart(part);
+        const myPoints = await cardController.getAllPointsInAPartOfAUser(part, user);
+        const oponnentPoints = cards.length / 2 - myPoints;
+
+
+        return res.status(200).json({'Cards': cards, myPoints, oponnentPoints}).send().end();
+    });
 
 export {
     cardRouter

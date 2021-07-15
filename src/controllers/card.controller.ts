@@ -4,6 +4,7 @@ import {SequelizeManager} from "../models";
 import { cardCreateOption, CardInstance} from "../models/card.model";
 import {DeckInstance} from "../models/deck.model";
 import {CardRepository} from "../repositories/card.repository";
+import {PartInstance} from "../models/part.model";
 
 export class CardController {
 
@@ -50,5 +51,15 @@ export class CardController {
 
     public async getCardIfAvailableAndInTheSameDeck(cardAssociateId: number, deck: DeckInstance): Promise<CardInstance | null> {
         return await CardRepository.getCardIfNotAlreadyPairedWithAnOther(cardAssociateId, deck);
+    }
+
+    public async getAllCardsValidFromThePart(part: PartInstance): Promise<CardInstance[]> {
+        return await CardRepository.getAllValidCardsPlayInAPart(part);
+    }
+
+    public async getAllPointsInAPartOfAUser(part: PartInstance, user: UserInstance): Promise<number> {
+
+        const validCards = await CardRepository.getAllValidCardsForAUser(user, part);
+        return validCards.length === 0 ? 0 : validCards.length / 2
     }
 }

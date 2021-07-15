@@ -23,6 +23,7 @@ export interface PartCreationProps extends Optional<PartProps, "id"> {}
 export interface PartInstance extends Model<PartProps, PartCreationProps>, PartProps {
     addCard: BelongsToManyAddAssociationMixin<CardInstance,"Id">
     addUser: BelongsToManyAddAssociationMixin<UserInstance, "id">;
+    getUsers: HasManyGetAssociationsMixin<UserInstance>;
     setDeck: BelongsToSetAssociationMixin<DeckInstance, "id">;
     addShots: HasManyAddAssociationMixin<ShotInstance, "id">;
     getShots: HasManyGetAssociationsMixin<ShotInstance>;
