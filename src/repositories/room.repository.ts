@@ -13,12 +13,14 @@ export class RoomRepository {
         return await roomController.room.findAll({
             include: [{
                 model: roomController.part,
+                },{
+                model: roomController.userSocket,
                 include: [{
                     model: roomController.user,
                     where: {
                         id: user.id
                     }
-                }]
+                }],
             }]
         });
     }

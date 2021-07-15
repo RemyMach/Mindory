@@ -22,9 +22,9 @@ app.get('/', (req: Request, res: Response) => {
 
 io.on('connection', async (socket: Socket) => {
 
-    console.log(`${socket.id} user is connected`)
+    /*console.log(`${socket.id} user is connected`)
     console.log(socket.handshake.query.room)
-    console.log(socket.handshake.query.userToken)
+    console.log(socket.handshake.query.userToken)*/
     if(Array.isArray(socket.handshake.query.room) || Array.isArray(socket.handshake.query.userToken))
         return {error: 'the parameters are not valid'};
 
@@ -43,7 +43,6 @@ io.on('connection', async (socket: Socket) => {
         let userWhoPlayInFirst;
         userWhoPlayInFirst = await getUserWhoPlayInFirst(roomId);
         if('socketId' in userWhoPlayInFirst){
-            console.log(userWhoPlayInFirst);
             const usersAuthentified = await verifyUserAuthentified(roomId)
             io.to(String(roomId)).emit('userWhoPlayInFirst', (userWhoPlayInFirst.socketId));
             if(usersAuthentified)

@@ -10,6 +10,7 @@ import {getCardOfAPLayingDeck} from "../utils/cards/getCardsFromIds";
 import {PartRepository} from "../repositories/part.repository";
 import {CardRepository} from "../repositories/card.repository";
 import {types} from "util";
+import {UserRepository} from "../repositories/user.repository";
 
 export class PartController {
 
@@ -50,8 +51,8 @@ export class PartController {
         if(user !== null)
             await part.addUser(user);
 
+        await part.setDeck(deck);
         await Promise.all([
-            part.setDeck(deck),
             cards!.map((card: CardInstance | null) => {
                 if(card != null)
                     part.addCard(card);
@@ -102,5 +103,18 @@ export class PartController {
     public async registerTheEndOfThePart(part: PartInstance, time: number,): Promise<void> {
 
         await part.update({time});
+    }
+
+    public async addAUserToAPart(user: UserInstance, part: PartInstance): Promise<void> {
+        console.log('on passe bien dans l\'add User');
+        await part.addUser(user);
+    }
+
+    public async userIsAlreadyInPart(user: UserInstance, part: PartInstance): Promise<boolean> {
+        const res = await UserRepository.userIsInPart(part, user);
+        console.log(res)
+        console.log(part.id)
+        console.log(user.name)
+        return res !== null;
     }
 }

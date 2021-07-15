@@ -38,6 +38,7 @@ roomRouter.post("/",[
         }
 
         const { deckId} = req.body;
+        console.log(`deck Id ${deckId}`)
         const roomController = await RoomController.getInstance();
         const deckController = await DeckController.getInstance();
         const deck = await roomController.deck.findByPk(deckId);
@@ -75,6 +76,7 @@ roomRouter.get('/', [
     }else if (user === null) {
         throw new BasicError("The user doesn't exist");
     }
+    console.log(user.name)
     const roomController = await RoomController.getInstance();
     const room = await roomController.getRoomUpForAUser(user);
     if(room == null) {

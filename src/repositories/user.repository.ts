@@ -2,6 +2,8 @@ import { UserController } from "../controllers/user.controller";
 import { UserCreateProps, UserInstance, UserUpdateOptions } from "../models/user.model";
 import {Op} from 'sequelize';
 import { RoleInstance } from "../models/role.model";
+import {PartInstance} from "../models/part.model";
+import {PartController} from "../controllers/part.controller";
 
 export class UserRepository {
 
@@ -174,6 +176,22 @@ export class UserRepository {
             },
             individualHooks: true
         });
+    }
+
+    public static async userIsInPart(part: PartInstance, user: UserInstance): Promise<UserInstance | null> {
+        const partController = await PartController.getInstance();
+        return await partController.user.findOne({
+            where: {
+                id: user.id
+            },
+            include: [{
+                required: true,
+                model: partController.part,
+                where: {
+                    id: part.id
+                }
+            }]
+        })
     }
 
 }
