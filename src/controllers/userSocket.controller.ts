@@ -4,6 +4,7 @@ import {SequelizeManager} from "../models";
 import {RoomInstance} from "../models/room.model";
 import {UserSocketInstance} from "../models/userSocket.model";
 import {UserSocketRepository} from "../repositories/userSocket.repository";
+import {log} from "util";
 
 export class UserSocketController {
 
@@ -56,7 +57,7 @@ export class UserSocketController {
 
     public async verifiyIfUsersSocketHaveUsers(room: RoomInstance): Promise<boolean> {
         const usersSocket = await UserSocketRepository.getAllUserSocketInARoom(room);
-        const users = usersSocket.map(async (userSocket) => await userSocket.getUser());
+        const users = await Promise.all(usersSocket.map(async (userSocket) => await userSocket.getUser()));
         return usersSocket.length == 2 && users.every((user) => user !== null);
 
     }
