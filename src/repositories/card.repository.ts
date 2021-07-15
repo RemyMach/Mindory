@@ -76,12 +76,15 @@ export class CardRepository {
         const cardController = await CardController.getInstance();
         const partController = await PartController.getInstance();
         return await cardController.card.findAll({
+            attributes: ['id'],
             include: [{
+                attributes: ['id'],
                 model: partController.shot,
                 where: {
                     is_valid: 1
                 },
                 include: [{
+                    attributes: ['id'],
                     model: partController.part,
                     where: {
                         id: part.id

@@ -59,7 +59,7 @@ export class CardController {
 
     public async getAllPointsInAPartOfAUser(part: PartInstance, user: UserInstance): Promise<number> {
 
-        const validCards = await CardRepository.getAllValidCardsForAUser(user, part);
+        const validCards = await CardRepository.getAllValidCardsForAUser(part, user);
         return validCards.length === 0 ? 0 : validCards.length / 2
     }
 }

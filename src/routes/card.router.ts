@@ -64,7 +64,7 @@ cardRouter.post("/",
         const card = await cardController.createCard({image, text, deck, cardAssociate});
 
 
-        return res.status(201).json({text: card?.text, image: card?.image}).send().end();
+        return res.status(201).json({text: card?.text, image: card?.image}).end();
 });
 
 cardRouter.get("/parts/:partId/pair",
@@ -103,12 +103,13 @@ cardRouter.get("/parts/:partId/pair",
 
         const cardController = await CardController.getInstance();
 
-        const cards = await cardController.getAllCardsValidFromThePart(part);
+        let cards: CardInstance[] | number[] = await cardController.getAllCardsValidFromThePart(part);
+        cards = cards.map(card => card.id);
         const myPoints = await cardController.getAllPointsInAPartOfAUser(part, user);
         const oponnentPoints = cards.length / 2 - myPoints;
 
 
-        return res.status(200).json({'Cards': cards, myPoints, oponnentPoints}).send().end();
+        return res.status(200).json({cards, myPoints, oponnentPoints}).end();
     });
 
 export {
