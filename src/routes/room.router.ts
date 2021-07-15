@@ -1,5 +1,5 @@
 import express, {Request, Response} from "express";
-import {body, param, validationResult} from "express-validator";
+import {body, param, query, validationResult} from "express-validator";
 import {authMiddleware} from "../middlewares/auth.middleware";
 import InvalidInput from "../errors/invalid-input";
 import {UserController} from "../controllers/user.controller";
@@ -9,6 +9,7 @@ import {UserInstance} from "../models/user.model";
 import {RoomController} from "../controllers/room.controller";
 import {DeckController} from "../controllers/deck.controller";
 import {RoomRepository} from "../repositories/room.repository";
+import {RoomInstance} from "../models/room.model";
 
 
 
@@ -62,28 +63,38 @@ roomRouter.post("/",[
         return res.status(201).json({id: room.id, token: room.token, part: {id: part.id} }).end();
 });
 
-roomRouter.get('/', [
-        authMiddleware
-    ], async function(req: Request, res: Response) {
-    const errors = validationResult(req).array();
-    if (errors.length > 0) {
-        throw new InvalidInput(errors);
-    }
+roomRouter.get('/', async function(req: Request, res: Response) {
     const userController = await UserController.getInstance();
-    const user = await userController.authenticateUserWithToken(req.headers["authorization"]);
-    if(user === undefined) {
-        return res.status(401).end();
-    }else if (user === null) {
-        throw new BasicError("The user doesn't exist");
+
+    let user: UserInstance | null | undefined = null;
+    if(req.headers["authorization"]) {
+        user = await userController.authenticateUserWithToken(req.headers["authorization"]);
+        if(user === undefined) {
+            return res.status(401).end();
+        }else if (user === null) {
+            throw new BasicError("The user doesn't exist");
+        }
     }
-    console.log(user.name)
+    const token = req.query.token as string;
     const roomController = await RoomController.getInstance();
-    const room = await roomController.getRoomUpForAUser(user);
-    if(room == null) {
-        return res.status(200).json({}).end();
+    let finalRoom: RoomInstance | null;
+    if(user) {
+        const room = await roomController.getRoomUpForAUser(user);
+        if(room == null) {
+            return res.status(200).json({}).end();
+        }
+        finalRoom = room[0];
+    }else {
+        if(token === undefined)
+            return res.status(200).json({}).end();
+        finalRoom = await roomController.getRoomByToken(token);
+        if(finalRoom == null) {
+            return res.status(200).json({}).end();
+        }
     }
-    const part = await room[0].getPart();
-    return res.status(200).json({id: room[0].id, token: room[0].token, keyword: room[0].keyword, part: {id: part.id} }).end();
+
+    const part = await finalRoom.getPart();
+    return res.status(200).json({id: finalRoom.id, token: finalRoom.token, keyword: finalRoom.keyword, part: {id: part.id} }).end();
 });
 
 roomRouter.get('/token/:token', [

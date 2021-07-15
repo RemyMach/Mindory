@@ -16,13 +16,13 @@ partRouter.post("/", [
         body("deckId")
             .isNumeric()
             .withMessage("you have to fill a valid id for a deck"),
-        authMiddleware
     ],
     async function(req: Request, res: Response) {
         const errors = validationResult(req).array();
         if (errors.length > 0) {
             throw new InvalidInput(errors);
         }
+
 
         const userController = await UserController.getInstance();
         const user = await userController.authenticateUserWithToken(req.headers["authorization"]);
