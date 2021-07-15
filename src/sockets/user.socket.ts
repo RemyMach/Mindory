@@ -18,7 +18,7 @@ const addUserToARoom = async (socket: Socket, { id, tokenSession, roomId }: User
 
     // vérifier que si tokenSession filled alors valide
     let user: UserInstance | undefined | null;
-    if(tokenSession) {
+    if(tokenSession && tokenSession !== 'undefined') {
         const userController = await UserController.getInstance();
         user = await userController.authenticateUserWithToken(tokenSession);
         if(user === undefined) {
