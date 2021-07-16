@@ -1,8 +1,7 @@
-import {body, oneOf, param, validationResult} from "express-validator";
+import {body, param, validationResult} from "express-validator";
 import express, {Request, Response}from "express";
 import {adminAuthMiddleware, authMiddleware} from "../middlewares/auth.middleware";
 import InvalidInput from "../errors/invalid-input";
-import multer, {Multer} from "multer";
 import {MulterConfigMiddleware} from "../middlewares/multerConfig.middleware";
 import 'express-async-errors';
 import fs from 'fs';
@@ -11,9 +10,7 @@ import {CardController} from "../controllers/card.controller";
 import {CardInstance} from "../models/card.model";
 import {CardRepository} from "../repositories/card.repository";
 import {PartController} from "../controllers/part.controller";
-import {UserRepository} from "../repositories/user.repository";
 import {UserController} from "../controllers/user.controller";
-
 const cardRouter = express.Router();
 
 
@@ -67,6 +64,26 @@ cardRouter.post("/",
         return res.status(201).json({text: card?.text, image: card?.image}).end();
 });
 
+cardRouter.delete("/:cardId",
+    [
+        param("cardId").exists()
+            .withMessage("you have to provide a valid deckId")
+    ],
+    async function (req: Request, res: Response) {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) {
+            throw new InvalidInput(errors);
+        }
+        const {cardId} = req.params;
+        const cardController = await CardController.getInstance();
+        const card = await cardController.card.findByPk(cardId);
+        if (card === null)
+            throw new BasicError("the Card doesn't exist");
+
+        await CardRepository.deleteCardById(Number.parseInt(cardId));
+
+        return res.status(200).json('La carte a bien été supprimée').end();
+    });
 cardRouter.get("/parts/:partId/pair",
     authMiddleware,
     [

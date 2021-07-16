@@ -67,7 +67,7 @@ deckRouter.get("/all", [
 
         const deckController = await DeckController.getInstance();
         const decks = await deckController.deck.findAll({
-            attributes: ["id", "title", "image", [Sequelize.literal('(SELECT COUNT(*) FROM card C WHERE C.deck_id=Deck.id)'), "count"]],
+            attributes: ["id", "title", "image", [Sequelize.literal('(SELECT COUNT(*) FROM Card C WHERE C.deck_id=Deck.id)'), "count"]],
             offset,
             limit,
         });
