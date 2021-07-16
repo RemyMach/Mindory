@@ -160,6 +160,27 @@ roomRouter.put('/', [
     return res.status(200).json({}).end();
 });
 
+roomRouter.get('/keyWord/:keyWord', [
+    param('keyWord')
+        .exists()
+        .isLength({min: 5, max: 40})
+        .withMessage("vous devez transmettre un keyword valide"),
+], async function(req: Request, res: Response) {
+    const errors = validationResult(req).array();
+    if (errors.length > 0) {
+        throw new InvalidInput(errors);
+    }
+
+    const { keyWord} = req.params;
+    const roomController = await RoomController.getInstance();
+
+    const room = await roomController.getARoomByKeyword(keyWord);
+    if(!room)
+        throw new BasicError("The room doesn't exist");
+
+    return res.status(200).json(room).end();
+});
+
 export {
     roomRouter
 }

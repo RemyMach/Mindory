@@ -100,4 +100,8 @@ export class RoomController {
         return room === null;
     }
 
+    public async getARoomByKeyword(keyWord: string): Promise<RoomInstance | null> {
+        return await RoomRepository.getRoomWithAKeyWord(keyWord);
+    }
+
 }
