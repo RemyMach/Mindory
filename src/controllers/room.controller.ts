@@ -76,7 +76,6 @@ export class RoomController {
     public async verifyIfTheRoomHasBeenPlayed(room: RoomInstance): Promise<boolean> {
         const part = await room.getPart();
         const shots = await part.getShots();
-        console.log(shots.length);
         return shots.length > 0;
 
     }
@@ -94,6 +93,11 @@ export class RoomController {
 
     public async getRoomOfAUserSocket(userSocket: UserSocketInstance): Promise<RoomInstance | null> {
         return await userSocket.getRoom();
+    }
+
+    public async keyWordIsUniqueInRoomUp(keyWord: string): Promise<boolean> {
+        const room = await RoomRepository.getRoomWithAKeyWord(keyWord);
+        return room === null;
     }
 
 }

@@ -44,4 +44,13 @@ export class RoomRepository {
             }
         });
     }
+
+    public static async getRoomWithAKeyWord(keyWord: string): Promise<RoomInstance | null> {
+        const roomController = await RoomController.getInstance();
+        return await roomController.room.findOne({
+            where: {
+                keyword: keyWord
+            }
+        });
+    }
 }

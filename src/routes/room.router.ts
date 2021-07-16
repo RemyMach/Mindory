@@ -145,12 +145,18 @@ roomRouter.put('/', [
 
     const { keyWord, roomId} = req.body;
     const roomController = await RoomController.getInstance();
+
     const room = await roomController.room.findByPk(roomId);
-    if(room == null) {
+    if(room === null) {
         throw new BasicError("The room doesn't exist");
     }
 
+    const keyOrdIsUnique = await roomController.keyWordIsUniqueInRoomUp(keyWord);
+    if(!keyOrdIsUnique)
+        throw new BasicError("The keyWord is not available");
+
     await roomController.updateRoomKeyWord(room, keyWord);
+
     return res.status(200).json({}).end();
 });
 
