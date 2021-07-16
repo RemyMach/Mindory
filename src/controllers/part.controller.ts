@@ -106,7 +106,6 @@ export class PartController {
     }
 
     public async addAUserToAPart(user: UserInstance, part: PartInstance): Promise<void> {
-        console.log('on passe bien dans l\'add User');
         await part.addUser(user);
     }
 
@@ -118,5 +117,9 @@ export class PartController {
     public async partIsPlayedByAuthentifiedUsers(part: PartInstance): Promise<boolean> {
         const users = await part.getUsers();
         return users.length == 2;
+    }
+
+    public async getBetterPartOfADeckForAUser(deck: DeckInstance, user: UserInstance): Promise<PartInstance[]> {
+        return await PartRepository.getBetterPartOfADeckForAUser(deck, user);
     }
 }

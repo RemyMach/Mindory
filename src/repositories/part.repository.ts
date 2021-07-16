@@ -4,6 +4,8 @@ import {SessionInstance} from "../models/session.model";
 import {PartInstance} from "../models/part.model";
 import {PartController} from "../controllers/part.controller";
 import {CardInstance} from "../models/card.model";
+import {DeckInstance} from "../models/deck.model";
+import {Op} from "sequelize";
 
 export class PartRepository {
 
@@ -56,6 +58,23 @@ export class PartRepository {
                         id: part.id
                     }
                 }]
+            }]
+        });
+    }
+
+    public static async getBetterPartOfADeckForAUser(deck: DeckInstance, user: UserInstance): Promise<PartInstance[]> {
+        const partController = await PartController.getInstance();
+        return await partController.part.findAll({
+            where: {
+                time: {[Op.not]: null}
+            },
+            order: [['time', 'ASC']],
+            include: [{
+                attributes: [],
+                model: partController.user,
+                where: {
+                    id: user.id
+                }
             }]
         });
     }
