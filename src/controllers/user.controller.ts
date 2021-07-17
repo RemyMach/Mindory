@@ -66,13 +66,20 @@ export class UserController {
             delete props.name;
         if(props.surname === undefined)
             delete props.surname;
-        const user = await UserRepository.updateUser(token, props);
-
-        return user;
+        return await UserRepository.updateUser(token, props);
     }
 
     public async resetPassword(user: UserInstance, new_password: string) : Promise<UserInstance | null> {
 
+        return await UserRepository.updateUserpassword(user, new_password);
+    }
+
+    public async changePassword(user: UserInstance, new_password: string, oldPassword: string) : Promise<UserInstance | null>
+    {
+        const isSamePassword = await compare(oldPassword, user.password);
+        if(!isSamePassword) {
+            return null;
+        }
         return await UserRepository.updateUserpassword(user, new_password);
     }
 

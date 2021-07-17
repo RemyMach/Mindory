@@ -1,7 +1,6 @@
-import { UserController } from "../controllers/user.controller";
-import { UserCreateProps, UserInstance, UserUpdateOptions } from "../models/user.model";
+import {UserController} from "../controllers/user.controller";
+import {UserInstance, UserUpdateOptions} from "../models/user.model";
 import {Op} from 'sequelize';
-import { RoleInstance } from "../models/role.model";
 import {PartInstance} from "../models/part.model";
 import {PartController} from "../controllers/part.controller";
 
@@ -16,36 +15,36 @@ export class UserRepository {
                 model: userController.role,
                 attributes: ['label']
             }],
-            offset, 
+            offset,
             limit
         });
-        
+
     }
 
     public static async getUserByToken(token: string): Promise<UserInstance | null> {
-        
+
         const userController = await UserController.getInstance();
-        return  await userController.user.findOne({
-            attributes: ['id', 'name', 'surname', 'email', 'username'],
+        return await userController.user.findOne({
+            attributes: ['id', 'name', 'surname', 'email', 'username', 'password'],
             include: [{
                 model: userController.role,
                 attributes: ['label']
             },
-            {
-                model: userController.session,
-                attributes: [],
-                where: {
-                    token
-                }
-            }],
+                {
+                    model: userController.session,
+                    attributes: [],
+                    where: {
+                        token
+                    }
+                }],
         });
     }
 
     public static async getUserByEmail(email: string): Promise<UserInstance | null> {
 
         const userController = await UserController.getInstance();
-        return  await userController.user.findOne({
-            attributes: ['id','name', 'surname', 'email'],
+        return await userController.user.findOne({
+            attributes: ['id', 'name', 'surname', 'email'],
             where: {
                 email
             }
@@ -54,10 +53,10 @@ export class UserRepository {
 
 
     public static async getUserById(id: number): Promise<UserInstance | null> {
-        
+
         const userController = await UserController.getInstance();
-        return  await userController.user.findOne({
-            attributes: ['id','name', 'surname', 'email'],
+        return await userController.user.findOne({
+            attributes: ['id', 'name', 'surname', 'email'],
             where: {
                 id
             }
@@ -65,10 +64,10 @@ export class UserRepository {
     }
 
     public static async getCompleteUserById(id: number): Promise<UserInstance | null> {
-        
+
         const userController = await UserController.getInstance();
-        return  await userController.user.findOne({
-            attributes: ['id','name', 'surname', 'email'],
+        return await userController.user.findOne({
+            attributes: ['id', 'name', 'surname', 'email'],
             where: {
                 id
             },
@@ -80,11 +79,11 @@ export class UserRepository {
     }
 
     public static async getUserByIdAndVerifyRole(id: number, role_labels: string[]): Promise<UserInstance | null> {
-        
+
         const userController = await UserController.getInstance();
-        
-        return  await userController.user.findOne({
-            attributes: ['id','name', 'surname', 'email'],
+
+        return await userController.user.findOne({
+            attributes: ['id', 'name', 'surname', 'email'],
             where: {
                 id
             },
@@ -117,12 +116,12 @@ export class UserRepository {
 
         const userController = await UserController.getInstance();
         const user = await userController.getUser(token);
-    
+
         const email_user = user?.email;
-       
+
         const props_convert = JSON.parse(JSON.stringify(props));
-        
-        if(email_user === undefined) {
+
+        if (email_user === undefined) {
             return null;
         }
         await userController.user.update(
@@ -141,8 +140,8 @@ export class UserRepository {
         const userController = await UserController.getInstance();
 
         const email_user = user?.email;
-        
-        if(email_user === undefined || new_password === undefined) {
+
+        if (email_user === undefined || new_password === undefined) {
             return null;
         }
 
@@ -165,8 +164,8 @@ export class UserRepository {
         const user = await userController.getUser(token);
 
         const email_user = user?.email;
-        
-        if(email_user === undefined){
+
+        if (email_user === undefined) {
             return null;
         }
 

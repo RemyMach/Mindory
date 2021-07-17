@@ -5,6 +5,7 @@ import { body, validationResult } from 'express-validator';
 import InvalidInput from "../errors/invalid-input";
 import 'express-async-errors';
 import {EmailSender} from "../services/mailing";
+import {authMiddleware} from "../middlewares/auth.middleware";
 
 
 const passwordResetRouter = express.Router();
@@ -43,12 +44,12 @@ passwordResetRouter.put("/",
     [
         body('token')
             .trim()
-            .isLength({ min: 64, max: 64 })
+            .isLength({ min: 64, max: 255 })
             .withMessage('le token de verification n\'est pas valide'),
         body('password')
             .trim()
             .isLength({ min: 8, max: 50 })
-            .withMessage('le mot de passe doit-être entre 8 et 50 carractères'),
+            .withMessage('le mot de passe doit-être entre 8 et 50 caractères'),
     ],
     async function(req: Request, res: Response) {
 
@@ -77,6 +78,43 @@ passwordResetRouter.put("/",
     try {
         await userController.resetPassword(userVerificationToken, password);
         await passwordResetController.deleteAllTokenForAUser(userVerificationToken);
+        return res.status(200).end();
+    }catch {
+        return res.status(400).end();
+    }
+});
+
+passwordResetRouter.put("/change",
+    [
+        body('oldPassword')
+            .trim()
+            .isLength({ min: 8, max: 50 })
+            .withMessage('le mot de passe doit-être entre 8 et 50 caractères'),
+        body('newPassword')
+            .trim()
+            .isLength({ min: 8, max: 50 })
+            .withMessage('le mot de passe doit-être entre 8 et 50 caractères')
+    ],
+    authMiddleware,
+    async function(req: Request, res: Response) {
+
+    const errors = validationResult(req).array();
+    if (errors.length > 0) {
+
+        throw new InvalidInput(errors);
+    }
+
+    const userController = await UserController.getInstance();
+
+    const user = await userController.authenticateUserWithToken(req.headers["authorization"]);
+    if (user === undefined || user === null)
+        throw new Error();
+
+    const { oldPassword, newPassword } = req.body;
+    const passwordResetController = await PasswordResetController.getInstance();
+    try {
+        await userController.changePassword(user, newPassword, oldPassword);
+        await passwordResetController.deleteAllTokenForAUser(user);
         return res.status(200).end();
     }catch {
         return res.status(400).end();
