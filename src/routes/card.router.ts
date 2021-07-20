@@ -61,7 +61,7 @@ cardRouter.post("/",
         const card = await cardController.createCard({image, text, deck, cardAssociate});
 
 
-        return res.status(201).json({text: card?.text, image: card?.image}).end();
+        return res.status(201).json({id: card?.id, text: card?.text, image: card?.image}).end();
 });
 
 cardRouter.delete("/:cardId",
