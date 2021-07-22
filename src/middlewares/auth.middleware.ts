@@ -21,9 +21,7 @@ export async function authMiddleware( req: express.Request, res: express.Respons
     }
 }
 
-export async function adminAuthMiddleware(err: Error, req: express.Request, res: express.Response,  next: express.NextFunction) {
-    if(err)
-        return next();
+export async function adminAuthMiddleware( req: express.Request, res: express.Response,  next: express.NextFunction) {
 
     const auth = req.headers["authorization"];
 

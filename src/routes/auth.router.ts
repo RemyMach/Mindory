@@ -1,6 +1,6 @@
 import express, {Request, Response} from "express";
 import {AuthController} from "../controllers/auth.controller";
-import {authMiddleware} from "../middlewares/auth.middleware";
+import {adminAuthMiddleware, authMiddleware} from "../middlewares/auth.middleware";
 import {UserRepository} from "../repositories/user.repository";
 import 'express-async-errors';
 import {UserController} from "../controllers/user.controller";
@@ -96,7 +96,13 @@ authRouter.delete("/logout", authMiddleware,async function(req: Request, res: Re
 
 });
 
-authRouter.post("/token", authMiddleware,async function(req: Request, res: Response) {
+authRouter.get("/token", authMiddleware,async function(req: Request, res: Response) {
+
+    return res.status(200).end();
+});
+
+
+authRouter.get("/token/role/admin", adminAuthMiddleware,async function(req: Request, res: Response) {
 
     return res.status(200).end();
 });
