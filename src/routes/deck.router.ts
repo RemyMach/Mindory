@@ -153,6 +153,7 @@ deckRouter.delete("/:deckId",
         param("deckId").exists()
             .withMessage("you have to provide a valid deckId")
     ],
+    adminAuthMiddleware,
     async function (req: Request, res: Response) {
         const errors = validationResult(req).array();
         if (errors.length > 0) {
