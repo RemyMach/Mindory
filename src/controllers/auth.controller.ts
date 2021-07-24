@@ -112,8 +112,10 @@ export class AuthController {
                     token
                 },
                 include: {
+                    required: true,
                     model: this.user,
                     include: [{
+                        required: true,
                         model: this.role,
                         where: {
                             [Op.or]: roles_formated
@@ -121,11 +123,9 @@ export class AuthController {
                     }],
                 },
             });
-            console.log(session)
 
             return session;
         }catch(e) {
-            console.log(e)
             return null;
         }
     }

@@ -33,7 +33,6 @@ export class EmailSender implements EmailApi{
 
     async sendResetPasswordEmail(args: EmailApiSendResetPasswordEmailArgs): Promise<EmailApiSendEmailResponse> {
         this.validateEmailSender();
-        console.log("je passe la donc pas d'erreur");
         return this.emailApi!.sendResetPasswordEmail(args);
     }
 

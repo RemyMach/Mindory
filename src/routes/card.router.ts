@@ -36,8 +36,6 @@ cardRouter.post("/",
             image = req.file.filename;
 
         const { text, deckId, cardAssociateId } = req.body;
-        console.log(text, deckId, cardAssociateId)
-        console.log(req.file)
         if(image === undefined && text === undefined)
             throw new BasicError("you have to provide text or file");
 

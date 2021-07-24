@@ -4,48 +4,66 @@ import {adminAuthMiddleware, authMiddleware} from "../middlewares/auth.middlewar
 import {UserRepository} from "../repositories/user.repository";
 import 'express-async-errors';
 import {UserController} from "../controllers/user.controller";
+import {body, validationResult} from "express-validator";
+import InvalidInput from "../errors/invalid-input";
+import {UserInstance} from "../models/user.model";
 
 const authRouter = express.Router();
 
-authRouter.post("/subscribe", async function(req, res) {
+authRouter.post("/subscribe",
+    [
+        body("name")
+            .exists()
+            .isString()
+            .withMessage("un nom est requis"),
+        body("surname")
+            .exists()
+            .isString()
+            .withMessage("un nom est requis"),
+        body("username")
+            .exists()
+            .isString()
+            .withMessage("un username est requis"),
+        body("email")
+            .exists()
+            .isString()
+            .withMessage("un mail est requis"),
 
-    const name = req.body.name;
-    const surname = req.body.surname;
-    const password = req.body.password;
-    const username = req.body.username;
-    const email = req.body.email;
+    ],
+    async function(req: Request, res: Response) {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) {
 
-    if(name === undefined || password === undefined || username === undefined || surname === undefined || email === undefined) {
-        res.status(400).end();
-        return;
-    }
+            throw new InvalidInput(errors);
+        }
 
+    const {name, surname, password, username, email} = req.body;
 
     const authController = await AuthController.getInstance();
-    try{
-        const user = await authController.subscribe({
+    let user: UserInstance | null;
+    try {
+        user = await authController.subscribe({
             name,
             surname,
             email,
             password,
             username
         });
-
-        if(user === null) {
-            res.status(400).end();
-            return;
-        }
-        res.status(201);
-        res.json({
-            name,
-            surname,
-            email,
-            username
-        });
-
-    }catch(validationError){
-        res.status(400).end();
+    }catch(e) {
+        return res.status(400).send(e.message).end();
     }
+
+    if(user === null) {
+        res.status(400).end();
+        return;
+    }
+    res.status(201);
+    res.json({
+        name,
+        surname,
+        email,
+        username
+    });
 });
 
 authRouter.post("/login", async function(req: Request, res: Response) {
