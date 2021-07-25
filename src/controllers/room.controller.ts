@@ -15,6 +15,7 @@ import {generateToken} from "../utils/password_reset/password_reset";
 import {PasswordResetInstance} from "../models/passwordReset.model";
 import {PasswordResetRepository} from "../repositories/passwordReset.repository";
 import {RoomRepository} from "../repositories/room.repository";
+import {UserSocketRepository} from "../repositories/userSocket.repository";
 
 export class RoomController {
 
@@ -80,9 +81,13 @@ export class RoomController {
 
     }
 
-    public async roomIsAvailableForANewUser(room: RoomInstance): Promise<boolean> {
+    public async roomIsAvailableForANewUserOrUserIsInTheRoom(room: RoomInstance, user: UserInstance | null | undefined): Promise<boolean> {
 
-        return await this.getUserSocketNumberInARoom(room) <= 1;
+        if(!user)
+            return await this.getUserSocketNumberInARoom(room) <= 1;
+        else {
+            return await UserSocketRepository.getUserWhoHaveUserSocketInTheRoom(user, room) !== null || await this.getUserSocketNumberInARoom(room) <= 1;
+        }
     }
 
     public async getUserSocketNumberInARoom(room: RoomInstance): Promise<number> {

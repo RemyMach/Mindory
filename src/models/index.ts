@@ -76,7 +76,7 @@ export class SequelizeManager implements SequelizeManagerProps {
         }
 
         SequelizeManager.associate(managerProps);
-        await sequelize.sync();
+        await sequelize.sync({force: (process.env.FORCE_RESET_DB as string === 'true')});
         return new SequelizeManager(managerProps);
     }
 

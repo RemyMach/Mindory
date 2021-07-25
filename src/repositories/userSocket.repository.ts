@@ -36,4 +36,23 @@ export class UserSocketRepository {
             }]
         });
     }
+
+    public static async getUserWhoHaveUserSocketInTheRoom(user: UserInstance, room: RoomInstance): Promise<UserSocketInstance | null> {
+        const userSocketController = await UserSocketController.getInstance();
+        return await userSocketController.userSocket.findOne({
+            include: [{
+                required: true,
+                model: userSocketController.room,
+                where: {
+                    id: room.id
+                }
+            },{
+                required: true,
+                model: userSocketController.user,
+                where: {
+                    id: user.id
+                }
+            }]
+        });
+    }
 }

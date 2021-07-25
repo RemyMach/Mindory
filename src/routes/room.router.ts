@@ -106,17 +106,28 @@ roomRouter.get('/token/:token', [
     if (errors.length > 0) {
         throw new InvalidInput(errors);
     }
+    const userController = await UserController.getInstance();
+    const tokenUser = req.headers["authorization"];
+    let user: UserInstance | null | undefined;
+    if(tokenUser) {
+        user = await userController.authenticateUserWithToken(req.headers["authorization"]);
+        if(user === undefined) {
+            return res.status(401).end();
+        }else if (user === null) {
+            throw new BasicError("The user doesn't exist");
+        }
+    }
 
     const {token} = req.params
     const roomController = await RoomController.getInstance();
     const room = await roomController.getRoomByToken(token);
     if(room == null)
-        throw new BasicError("The token is not valid or to many people use it");
+        throw new BasicError("The token is not valid or to many people use it1");
     //if(await roomController.verifyIfTheRoomHasBeenPlayed(room))
         //throw new BasicError("The room has been played");
-    const roomAvailable = await roomController.roomIsAvailableForANewUser(room);
+    const roomAvailable = await roomController.roomIsAvailableForANewUserOrUserIsInTheRoom(room, user);
     if(!roomAvailable)
-        throw new BasicError("The token is not valid or to many people use it");
+        throw new BasicError("The token is not valid or to many people use it2");
 
     return res.status(200).json({is_available: roomAvailable}).end();
 });

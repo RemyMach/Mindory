@@ -78,12 +78,14 @@ export class CardRepository {
         return await cardController.card.findAll({
             attributes: ['id'],
             include: [{
+                required: true,
                 attributes: ['id'],
                 model: partController.shot,
                 where: {
                     is_valid: 1
                 },
                 include: [{
+                    required: true,
                     attributes: ['id'],
                     model: partController.part,
                     where: {

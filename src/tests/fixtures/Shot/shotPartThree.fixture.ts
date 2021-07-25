@@ -9,15 +9,15 @@ import {UserFixture} from "../user.fixture";
 import BasicError from "../../../errors/basicError";
 import {PartPythonFixture} from "../Part/partPython";
 
-export class ShotPartOneFixture implements fixture{
+export class ShotPartThreeFixture implements fixture{
 
-    private static instance: ShotPartOneFixture;
+    private static instance: ShotPartThreeFixture;
 
-    public static async getInstance(): Promise<ShotPartOneFixture> {
-        if(ShotPartOneFixture.instance === undefined) {
-            ShotPartOneFixture.instance = new ShotPartOneFixture();
+    public static async getInstance(): Promise<ShotPartThreeFixture> {
+        if(ShotPartThreeFixture.instance === undefined) {
+            ShotPartThreeFixture.instance = new ShotPartThreeFixture();
         }
-        return ShotPartOneFixture.instance;
+        return ShotPartThreeFixture.instance;
     }
 
     private constructor() {};
@@ -31,7 +31,7 @@ export class ShotPartOneFixture implements fixture{
         for(let i=0; i<cards.length; i+=2) {
             const shot = await manager.shot.create({isValid: 1, time: i});
             await Promise.all([
-                shot.setPart(partPythonFixture.part_1),
+                shot.setPart(partPythonFixture.part_3),
                 shot.setUser(userFixture.user_jean),
                 shot.addCard(cards[i]!),
                 shot.addCard(cards[i+1]!)
@@ -44,8 +44,7 @@ export class ShotPartOneFixture implements fixture{
         await manager.shot.sequelize?.query('SET FOREIGN_KEY_CHECKS = 0');
         await manager.shot.destroy({
             truncate: true,
-            force: true,
-            cascade: true
+            force: true
         });
     }
 }

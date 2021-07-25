@@ -29,7 +29,6 @@ export async function adminAuthMiddleware( req: express.Request, res: express.Re
         const token = auth.replace('Bearer ', '');
         const authController = await AuthController.getInstance();
         const session = await authController.getSpecificRoleSession(token, ['admin']);
-        console.log(session)
         if(session !== null) {
             next();
             return;
