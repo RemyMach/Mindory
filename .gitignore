@@ -105,6 +105,7 @@ dist
 
 # my environmnet files
 /config/dev.env
+/config/dev_force.env
 /config/prod.env
 /config/test.env
 .DS_Store
