@@ -12,11 +12,9 @@ export interface UserSocket {
     roomId: number;
 }
 
-// addUser, removeUser, getUser, getUsersInRoom
 
 const addUserToARoom = async (socket: Socket, { id, tokenSession, roomId }: UserSocket) => {
 
-    // vérifier que si tokenSession filled alors valide
     let user: UserInstance | undefined | null;
     if(tokenSession && tokenSession !== 'undefined') {
         const userController = await UserController.getInstance();
@@ -49,8 +47,6 @@ const addUserToARoom = async (socket: Socket, { id, tokenSession, roomId }: User
 }
 
 const removeUser = async (socketId: string) => {
-    // findIndex cherchera tant qu'il reste des users et s'arrétera quand elle retournera true
-    // et on récupère l'index de la ligne qui est égale à true
     const userSocketController = await UserSocketController.getInstance();
     const userSocket =  await userSocketController.getUserSocketBySocketId(socketId);
     if(userSocket === null) {
@@ -62,7 +58,6 @@ const removeUser = async (socketId: string) => {
 }
 
 const getNumberOfUser = async (roomId: number) => {
-    // vérifier que si roomId filled alors valide
     const roomController = await RoomController.getInstance();
     const room = await roomController.room.findByPk(roomId);
     if(!room) {

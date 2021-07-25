@@ -117,11 +117,8 @@ cardRouter.get("/parts/:partId/pair",
             return res.status(201).json({error: "no authentified users"}).end();
 
         const cardController = await CardController.getInstance();
-        console.log(part.id)
         let cards: CardInstance[] | number[] = await cardController.getAllCardsValidFromThePart(part);
-        console.log(cards);
         cards = cards.map(card => card.id);
-        console.log(cards);
         const myPoints = await cardController.getAllPointsInAPartOfAUser(part, user);
         const oponnentPoints = cards.length / 2 - myPoints;
 

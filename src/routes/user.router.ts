@@ -9,7 +9,6 @@ const userRouter = express.Router();
 userRouter.get("/", async function(req, res) {
 
 
-    console.log(req.headers);
     const userController = await UserController.getInstance();
     const user = await userController.authenticateUserWithToken(req.headers["authorization"]);
     if(user === undefined) {
@@ -24,7 +23,6 @@ userRouter.get("/", async function(req, res) {
 userRouter.put("/password", async function(req, res) {
 
 
-    console.log(req.headers);
     const userController = await UserController.getInstance();
     const user = await userController.authenticateUserWithToken(req.headers["authorization"]);
     if(user === undefined) {

@@ -70,13 +70,9 @@ partRouter.post("/existing", [
             throw new BasicError("The part doesn't exist");
 
         const alreadyInIt = await partController.userIsAlreadyInPart(user, part);
-        console.log(alreadyInIt);
         if(alreadyInIt) {
             return res.status(200).json({error: "User already in part"}).end();
         }
-        console.log(user.name);
-        console.log(user.id);
-        console.log(part.id);
         await partController.addAUserToAPart(user, part);
 
         return res.status(200).json({}).end();

@@ -39,7 +39,6 @@ roomRouter.post("/",[
         }
 
         const { deckId} = req.body;
-        console.log(`deck Id ${deckId}`)
         const roomController = await RoomController.getInstance();
         const deckController = await DeckController.getInstance();
         const deck = await roomController.deck.findByPk(deckId);

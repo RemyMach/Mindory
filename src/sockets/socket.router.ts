@@ -22,9 +22,6 @@ app.get('/', (req: Request, res: Response) => {
 
 io.on('connection', async (socket: Socket) => {
 
-    /*console.log(`${socket.id} user is connected`)
-    console.log(socket.handshake.query.room)
-    console.log(socket.handshake.query.userToken)*/
     if(Array.isArray(socket.handshake.query.room) || Array.isArray(socket.handshake.query.userToken))
         return {error: 'the parameters are not valid'};
 
@@ -49,7 +46,6 @@ io.on('connection', async (socket: Socket) => {
                 io.to(String(roomId)).emit('UsersAreAuthentified', '');
             else
                 io.to(String(roomId)).emit('UsersAreNotAuthentified', '');
-            //socket.emit('userWhoPlayInFirst', (userWhoPlayInFirst.socketId));
         }
     }
 
@@ -89,12 +85,10 @@ io.on('connection', async (socket: Socket) => {
     });
 
     socket.on('disconnect', async () => {
-        console.log(`${socket.id} user is disconnected`)
         await removeUser(socket.id);
     });
 
     socket.on('disconnectCustom', async () => {
-        console.log(`${socket.id} user is disconnected`)
         await removeUser(socket.id);
     });
 });
