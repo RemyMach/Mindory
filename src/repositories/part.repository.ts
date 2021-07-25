@@ -75,6 +75,13 @@ export class PartRepository {
                 where: {
                     id: user.id
                 }
+            },{
+                required: true,
+                attributes: [],
+                model: partController.deck,
+                where: {
+                    id: deck.id
+                }
             }]
         });
     }
