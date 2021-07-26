@@ -33,6 +33,9 @@ export class PasswordResetController {
 
         try {
             const passwordResetInstance = await PasswordResetRepository.getPasswordResetFromToken(token);
+
+            console.log(" ");
+            console.log(passwordResetInstance);
             if(!passwordResetInstance)
                 return null;
             return await passwordResetInstance.getUser();

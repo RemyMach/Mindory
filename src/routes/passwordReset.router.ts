@@ -1,7 +1,7 @@
 import express, {Request, Response}from "express";
 import {UserController} from "../controllers/user.controller";
 import {PasswordResetController} from "../controllers/passwordReset.controller";
-import { body, validationResult } from 'express-validator';
+import {body, param, validationResult} from 'express-validator';
 import InvalidInput from "../errors/invalid-input";
 import 'express-async-errors';
 import {EmailSender} from "../services/mailing";
@@ -39,6 +39,39 @@ passwordResetRouter.post("/", async function(req, res) {
 
     res.status(202).end();
 });
+
+passwordResetRouter.get("/:token",
+    [
+        param('token')
+            .trim()
+            .isLength({ min: 64, max: 255 })
+            .withMessage('le token de verification n\'est pas valide'),
+    ],
+    async function(req: Request, res: Response) {
+
+        const errors = validationResult(req).array();
+        if (errors.length > 0) {
+
+            throw new InvalidInput(errors);
+        }
+
+        const { token } = req.params;
+        const passwordResetController = await PasswordResetController.getInstance();
+
+        const userVerificationToken = await passwordResetController.getUserWithFromResetPasswordToken(token);
+
+        if (!userVerificationToken) {
+            errors.push({
+                location: 'body',
+                value: req.body.token,
+                param: 'token',
+                msg: 'le token de verification n\'est pas valide',
+            });
+            throw new InvalidInput(errors);
+        }
+
+        return res.status(200).end();
+    });
 
 passwordResetRouter.put("/",
     [
