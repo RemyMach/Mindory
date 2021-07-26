@@ -89,6 +89,13 @@ io.on('connection', async (socket: Socket) => {
     });
 
     socket.on('disconnectCustom', async () => {
+        const room = await getRoomOfAUser(socket.id);
+        if(room !== null && 'id' in room) {
+            const otherUser = await getOtherUserInARoom(socket.id, room);
+            if(otherUser.length === 1) {
+                socket.broadcast.to(String(room.id)).emit('otherUserDisconnected')
+            }
+        }
         await removeUser(socket.id);
     });
 });
