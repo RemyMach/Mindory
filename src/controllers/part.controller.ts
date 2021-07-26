@@ -101,8 +101,11 @@ export class PartController {
     }
 
     public async registerTheEndOfThePart(part: PartInstance, time: number,): Promise<void> {
-
-        await part.update({time});
+        //mettre un if un seul joueur dans la partie
+        const users = await part.getUsers();
+        if(users.length < 2) {
+            await part.update({time});
+        }
     }
 
     public async addAUserToAPart(user: UserInstance, part: PartInstance): Promise<void> {

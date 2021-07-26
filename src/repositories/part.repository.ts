@@ -70,6 +70,7 @@ export class PartRepository {
             },
             order: [['time', 'ASC']],
             include: [{
+                required: true,
                 attributes: [],
                 model: partController.user,
                 where: {
