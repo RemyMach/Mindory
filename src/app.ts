@@ -20,7 +20,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(function (req, res, next) {
-    if (req.path === '/metrics' && req.headers.authorization !== `Bearer ${process.env.promToken}`) {
+    if (req.path === '/metrics' && req.headers.authorization !== `Bearer ${process.env.PROM_TOKEN}`) {
 		throw new BasicError("you can't see metrics");
 	}
     next();
