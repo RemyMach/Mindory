@@ -18,7 +18,9 @@ app.use(function (req, res, next) {
     next();
 });
 app.use(function (req, res, next) {
-    if (req.path === '/metrics' && req.headers.authorization !== "Bearer " + process.env.promToken) {
+    console.log(process.env.PROM_TOKEN);
+    console.log("je me nomme");
+    if (req.path === '/metrics' && req.headers.authorization !== "Bearer " + process.env.PROM_TOKEN) {
         throw new basicError_1.default("you can't see metrics");
     }
     next();
