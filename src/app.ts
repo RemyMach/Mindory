@@ -1,8 +1,9 @@
-import express, {NextFunction, Request, Response, ErrorRequestHandler} from "express";
+import express, {NextFunction, Request, Response, ErrorRequestHandler, application} from "express";
 import {buildRoutes} from "./routes";
 import 'express-async-errors';
 import {errorHandler} from "./middlewares";
-import BaseCustomError from "./errors/base-custom-error";
+import BasicError from "./errors/basicError";
+import promBundle from 'express-prom-bundle';
 
 const app = express();
 
@@ -18,6 +19,26 @@ app.use(function (req, res, next) {
     next();
 });
 
+app.use(function (req, res, next) {
+    if (req.path === '/metrics' && req.headers.authorization !== `Bearer ${process.env.promToken}`) {
+		throw new BasicError("you can't see metrics");
+	}
+    next();
+});
+
+app.use(
+	promBundle({
+		metricsPath: '/metrics',
+		includeMethod: true,
+        includePath: true,
+		customLabels: { app: 'Mindory' },
+		promClient: {
+			collectDefaultMetrics: {
+				labels: { app: 'Mindory' },
+			},
+		},
+	})
+)
 
 buildRoutes(app);
 
