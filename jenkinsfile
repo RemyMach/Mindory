@@ -8,12 +8,6 @@ pipeline {
 		// 	}
 		// } 
 
-		stage('SCM') {
-			steps {
-				sh 'checkout scm'
-			}
-		}
-
         stage('SonarQube analysis') {
 			steps {
 				script {
