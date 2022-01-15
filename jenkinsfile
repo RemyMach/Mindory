@@ -11,11 +11,11 @@ pipeline {
                 sh 'npm install'
             }
         }
-		
+
 		stage('display') {
             steps {
-				sh "echo je suis ${params.pomme}"
-				sh "echo je suis ${env.pomme}"
+				sh "pwd"
+				sh "ls -la"
             }
         }
 
