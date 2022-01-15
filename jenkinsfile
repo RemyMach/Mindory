@@ -47,7 +47,7 @@ pipeline {
 							echo "jean"
 						fi
          			'''
-					sh "git push heroku main"
+					sh "git add . && git commit -m \"deploy\" && git push heroku main"
 				}
 			}
     	}
