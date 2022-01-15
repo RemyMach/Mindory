@@ -46,6 +46,7 @@ var user_repository_1 = require("../repositories/user.repository");
 var mock_email_api_1 = require("./email/mock-email-api");
 var mailing_1 = require("../services/mailing");
 var models_1 = require("../models");
+jest.setTimeout(10000);
 beforeEach(function (done) { return __awaiter(void 0, void 0, void 0, function () {
     var emailSender, mockEmailApi;
     return __generator(this, function (_a) {
@@ -58,7 +59,6 @@ beforeEach(function (done) { return __awaiter(void 0, void 0, void 0, function (
                 _a.sent();
                 emailSender = mailing_1.EmailSender.getInstance();
                 mockEmailApi = new mock_email_api_1.MockEmailApi();
-                jest.setTimeout(10000);
                 emailSender.activate();
                 emailSender.setEmailApi(mockEmailApi);
                 done();

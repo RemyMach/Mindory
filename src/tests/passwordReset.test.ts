@@ -7,13 +7,13 @@ import {EmailSender} from "../services/mailing";
 import { Sequelize } from "sequelize/types";
 import { SequelizeManager } from "../models";
 
+jest.setTimeout(10000);
 
 beforeEach(async (done) => {
     await destroyTablesElement();
     await fillTables();
     const emailSender = EmailSender.getInstance();
     const mockEmailApi = new MockEmailApi();
-	jest.setTimeout(10000);
 
     emailSender.activate();
     emailSender.setEmailApi(mockEmailApi);
