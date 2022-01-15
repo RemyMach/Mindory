@@ -11,7 +11,7 @@
     "start": "node dist/index.js",
     "test": "env-cmd -f ./config/test.prod.env jest --detectOpenHandles",
 	"test-prod": "env-cmd -f ./config/prod.env jest --runInBand --collectCoverage --watchAll",
-    "test-jenkins": "env-cmd -f ../config/test.env jest --runInBand --detectOpenHandles"
+    "test-jenkins": "env-cmd -f ../config/test.env jest --detectOpenHandles"
   },
   "repository": {
     "type": "git",
