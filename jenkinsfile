@@ -40,7 +40,7 @@ pipeline {
 			steps {
 				script {
 					sh '''#!/bin/bash
-                 		if [ "$(git remote -v | grep heroku)" != ''  ];then
+                 		if [ "$(git remote -v | grep heroku)" = '\n'  ];then
 						 	echo "result $(git remote -v | grep heroku)"
 							git remote add heroku https://git.heroku.com/mindory.git
 						else
