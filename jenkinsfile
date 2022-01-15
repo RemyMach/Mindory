@@ -1,5 +1,4 @@
 node {
-	agent any
 	tool {nodejs "node"}
     
 	stage('Git') {
