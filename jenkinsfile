@@ -1,6 +1,26 @@
 pipeline {
 	agent any
+	tools {nodejs "my_node"}
     stages {
+
+		stage('Build') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+		stage('display') {
+            steps {
+                sh 'ls -la'
+            }
+        }
+
+		stage('test') {
+            steps {
+                sh 'npm test'
+            }
+        }
+
         stage('SonarQube analysis') {
 			steps {
 				script {
