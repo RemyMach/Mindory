@@ -20,12 +20,12 @@ beforeEach(async (done) => {
     done();
 });
 
-/*afterAll(async (done) => {
-
+afterAll(async (done) => {
+	console.log("on passe ici");
 	(await SequelizeManager.getInstance()).sequelize.close();
 	console.log("connection fermé");
 	done();
-});*/
+});
 
 describe('Determine the password Reset routes behavior', () => {
 
@@ -37,9 +37,8 @@ describe('Determine the password Reset routes behavior', () => {
                 .send({
                     email: 'pomme@pomui.com',
                 }).expect(202);
-			
+			console.log("test");
 			done();
-
         });
 
         it('should return 202 because the email exist but the user doesn\'t have to know it', async (done) => {
@@ -52,7 +51,7 @@ describe('Determine the password Reset routes behavior', () => {
                 }).expect(202);
 
             expect(await user?.getPassword_Resets()).toHaveLength(1);
-
+			console.log("test 1");
 			done();
         });
 
@@ -60,7 +59,7 @@ describe('Determine the password Reset routes behavior', () => {
             const response = await request(app).post('/passwordReset')
                 .send({
                 }).expect(202);
-			
+			console.log("test 2");
 			done();
 
         });
@@ -85,7 +84,7 @@ describe('Determine the password Reset routes behavior', () => {
 
             //the first token has been deleted when the second has been add
             expect(passwordResetRequestOne).not.toEqual(passwordResetRequestTwo);
-
+			console.log("test 3");
 			done();
         });
     });
