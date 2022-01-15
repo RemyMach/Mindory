@@ -20,12 +20,12 @@ beforeEach(async (done) => {
     done();
 });
 
-afterAll(async (done) => {
+/*afterAll(async (done) => {
 
 	(await SequelizeManager.getInstance()).sequelize.close();
 	console.log("connection fermé");
 	done();
-});
+});*/
 
 describe('Determine the password Reset routes behavior', () => {
 
