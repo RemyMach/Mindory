@@ -18,13 +18,13 @@ pipeline {
 				sh "ls -la ../"
             }
         }
-		
+
 		stage('test') {
             steps {
                 sh 'npm run test-jenkins'
             }
         }
-
+		
         stage('SonarQube analysis') {
 			steps {
 				script {
