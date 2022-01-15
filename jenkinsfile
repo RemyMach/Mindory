@@ -11,6 +11,7 @@ pipeline {
                 sh 'npm install'
             }
         }
+		
 		stage('display') {
             steps {
 				sh "echo je suis ${params.pomme}"
