@@ -88,15 +88,23 @@ var SequelizeManager = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        sequelize = new sequelize_1.Sequelize({
-                            dialect: process.env.DB_DRIVER,
-                            host: process.env.DB_HOST,
-                            database: process.env.DB_NAME,
-                            username: process.env.DB_USER,
-                            password: process.env.DB_PASSWORD,
-                            port: Number.parseInt(process.env.DB_PORT),
-                            logging: false
-                        });
+                        if (process.env.DB_DRIVER === "sqlite") {
+                            sequelize = new sequelize_1.Sequelize({
+                                dialect: process.env.DB_DRIVER,
+                                storage: process.env.DB_NAME
+                            });
+                        }
+                        else {
+                            sequelize = new sequelize_1.Sequelize({
+                                dialect: process.env.DB_DRIVER,
+                                host: process.env.DB_HOST,
+                                database: process.env.DB_NAME,
+                                username: process.env.DB_USER,
+                                password: process.env.DB_PASSWORD,
+                                port: Number.parseInt(process.env.DB_PORT),
+                                logging: false
+                            });
+                        }
                         return [4 /*yield*/, sequelize.authenticate()];
                     case 1:
                         _a.sent();

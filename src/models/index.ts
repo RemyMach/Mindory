@@ -51,15 +51,24 @@ export class SequelizeManager implements SequelizeManagerProps {
     }
 
     private static async initialize(): Promise<SequelizeManager> {
-        const sequelize = new Sequelize({
-            dialect: process.env.DB_DRIVER as Dialect,
-            host: process.env.DB_HOST,
-            database: process.env.DB_NAME,
-            username: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,
-            port: Number.parseInt(process.env.DB_PORT as string),
-            logging: false
-        });
+		let sequelize: Sequelize;
+		if(process.env.DB_DRIVER === "sqlite") {
+			sequelize = new Sequelize({
+				dialect: process.env.DB_DRIVER as Dialect,
+				storage: process.env.DB_NAME
+			});
+		}else {
+			sequelize = new Sequelize({
+				dialect: process.env.DB_DRIVER as Dialect,
+				host: process.env.DB_HOST,
+				database: process.env.DB_NAME,
+				username: process.env.DB_USER,
+				password: process.env.DB_PASSWORD,
+				port: Number.parseInt(process.env.DB_PORT as string),
+				logging: false
+			});
+		}
+    
         await sequelize.authenticate();
         const managerProps: SequelizeManagerProps = {
             sequelize,

@@ -21,10 +21,10 @@ pipeline {
 
 		stage('test') {
             steps {
-                sh 'npm run test-jenkins'
+                sh 'npm run test-jenkins --testMatch dist/tests/passwordReset.test.js'
             }
         }
-		
+
         stage('SonarQube analysis') {
 			steps {
 				script {

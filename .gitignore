@@ -107,6 +107,7 @@ typings/
 /config/dev_force.env
 /config/prod.env
 /config/test.env
+/config/test.prod.env
 .DS_Store
 
 !src/assets/upload/python.png
