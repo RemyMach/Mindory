@@ -6,7 +6,7 @@ pipeline {
 	}
     stages {
 
-		stage('Build') {
+		/*stage('Build') {
             steps {
                 sh 'npm ci'
             }
@@ -34,13 +34,14 @@ pipeline {
 					sh "${scannerHome}/bin/sonar-scanner"
 				}
 			}
-    	}
+    	}*/
 
 		stage('Deploy') {
 			steps {
 				script {
 					sh '''#!/bin/bash
                  		if [ "$(git remote -v | grep heroku)" != ''  ];then
+						 	echo "result $(git remote -v | grep heroku)"
 							git remote add heroku https://git.heroku.com/mindory.git
 						else
 							echo "jean"
