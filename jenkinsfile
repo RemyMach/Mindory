@@ -1,6 +1,5 @@
 pipeline {
 	agent any
-	tools {nodejs "my_node"}
     stages {
         stage('SonarQube analysis') {
 			steps {
