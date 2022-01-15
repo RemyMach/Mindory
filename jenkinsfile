@@ -1,6 +1,9 @@
 pipeline {
 	agent any
 	tools {nodejs "my_node"}
+	environment {
+		pomme = "${params.pomme}"
+	}
     stages {
 
 		stage('Build') {
@@ -11,6 +14,8 @@ pipeline {
 
 		stage('display') {
             steps {
+				sh "echo je suis ${params.pomme}"
+				sh "echo je suis ${env.pomme}"
                 sh 'ls -la'
             }
         }
