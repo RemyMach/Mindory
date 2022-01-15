@@ -10,6 +10,7 @@ beforeEach(async (done) => {
     await fillTables();
     done();
 });
+
 describe('Determine the auth routes behavior', () => {
 
     describe('Test the creation of a user', () => {
