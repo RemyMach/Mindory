@@ -1,11 +1,28 @@
 node {
-  stage('SCM') {
-    checkout scm
-  }
-  stage('SonarQube Analysis') {
-    def scannerHome = tool 'SonarScanner';
-    withSonarQubeEnv() {
-      sh "${scannerHome}/bin/sonar-scanner"
+  tools {nodejs "node"}
+    
+  stages {
+        
+    stage('Git') {
+      steps {
+        git 'https://github.com/RemyMach/Mindory'
+      }
     }
+     
+    stage('Build') {
+      steps {
+        sh 'npm install'
+      }
+    } 
+
+	stage('SCM') {
+    	checkout scm
+  	}
+	stage('SonarQube Analysis') {
+		def scannerHome = tool 'SonarScanner';
+		withSonarQubeEnv() {
+			sh "${scannerHome}/bin/sonar-scanner"
+		}
+	}
   }
 }
