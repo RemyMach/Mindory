@@ -9,6 +9,7 @@ beforeEach(async (done) => {
     done();
 });
 
+
 describe("Determine the card routes behavior", () => {
     beforeEach(async () => {
         const sessionFixture = await SessionFixture.getInstance();
