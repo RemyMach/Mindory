@@ -45,6 +45,7 @@ var app_1 = __importDefault(require("../app"));
 var user_repository_1 = require("../repositories/user.repository");
 var mock_email_api_1 = require("./email/mock-email-api");
 var mailing_1 = require("../services/mailing");
+var models_1 = require("../models");
 beforeEach(function (done) { return __awaiter(void 0, void 0, void 0, function () {
     var emailSender, mockEmailApi;
     return __generator(this, function (_a) {
@@ -57,6 +58,7 @@ beforeEach(function (done) { return __awaiter(void 0, void 0, void 0, function (
                 _a.sent();
                 emailSender = mailing_1.EmailSender.getInstance();
                 mockEmailApi = new mock_email_api_1.MockEmailApi();
+                jest.setTimeout(10000);
                 emailSender.activate();
                 emailSender.setEmailApi(mockEmailApi);
                 done();
@@ -64,9 +66,21 @@ beforeEach(function (done) { return __awaiter(void 0, void 0, void 0, function (
         }
     });
 }); });
+afterAll(function (done) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, models_1.SequelizeManager.getInstance()];
+            case 1:
+                (_a.sent()).sequelize.close();
+                console.log("connection fermé");
+                done();
+                return [2 /*return*/];
+        }
+    });
+}); });
 describe('Determine the password Reset routes behavior', function () {
     describe('Test the reset of a password', function () {
-        it('should return 202 because the email doesn\'t exist in the db but the user doesn\'t have to know that', function () { return __awaiter(void 0, void 0, void 0, function () {
+        it('should return 202 because the email doesn\'t exist in the db but the user doesn\'t have to know that', function (done) { return __awaiter(void 0, void 0, void 0, function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -76,11 +90,12 @@ describe('Determine the password Reset routes behavior', function () {
                         }).expect(202)];
                     case 1:
                         response = _a.sent();
+                        done();
                         return [2 /*return*/];
                 }
             });
         }); });
-        it('should return 202 because the email exist but the user doesn\'t have to know it', function () { return __awaiter(void 0, void 0, void 0, function () {
+        it('should return 202 because the email exist but the user doesn\'t have to know it', function (done) { return __awaiter(void 0, void 0, void 0, function () {
             var user, _a, response, _b;
             return __generator(this, function (_c) {
                 switch (_c.label) {
@@ -101,11 +116,12 @@ describe('Determine the password Reset routes behavior', function () {
                         return [4 /*yield*/, (user === null || user === void 0 ? void 0 : user.getPassword_Resets())];
                     case 4:
                         _b.apply(void 0, [_c.sent()]).toHaveLength(1);
+                        done();
                         return [2 /*return*/];
                 }
             });
         }); });
-        it('should return 202 when the email is not fill because the user doesn\'t have to know how to do this request', function () { return __awaiter(void 0, void 0, void 0, function () {
+        it('should return 202 when the email is not fill because the user doesn\'t have to know how to do this request', function (done) { return __awaiter(void 0, void 0, void 0, function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -113,11 +129,12 @@ describe('Determine the password Reset routes behavior', function () {
                             .send({}).expect(202)];
                     case 1:
                         response = _a.sent();
+                        done();
                         return [2 /*return*/];
                 }
             });
         }); });
-        it('should return 202 and add 2 token but always have one for the user , the latest add', function () { return __awaiter(void 0, void 0, void 0, function () {
+        it('should return 202 and add 2 token but always have one for the user , the latest add', function (done) { return __awaiter(void 0, void 0, void 0, function () {
             var user, passwordResetRequestOne, passwordResetRequestTwo;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -146,6 +163,7 @@ describe('Determine the password Reset routes behavior', function () {
                         expect(passwordResetRequestTwo).toHaveLength(1);
                         //the first token has been deleted when the second has been add
                         expect(passwordResetRequestOne).not.toEqual(passwordResetRequestTwo);
+                        done();
                         return [2 /*return*/];
                 }
             });

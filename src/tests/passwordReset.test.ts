@@ -4,6 +4,8 @@ import app from "../app";
 import {UserRepository} from "../repositories/user.repository";
 import {MockEmailApi} from "./email/mock-email-api";
 import {EmailSender} from "../services/mailing";
+import { Sequelize } from "sequelize/types";
+import { SequelizeManager } from "../models";
 
 
 beforeEach(async (done) => {
@@ -11,10 +13,18 @@ beforeEach(async (done) => {
     await fillTables();
     const emailSender = EmailSender.getInstance();
     const mockEmailApi = new MockEmailApi();
+	jest.setTimeout(10000);
 
     emailSender.activate();
     emailSender.setEmailApi(mockEmailApi);
     done();
+});
+
+afterAll(async (done) => {
+
+	(await SequelizeManager.getInstance()).sequelize.close();
+	console.log("connection fermé");
+	done();
 });
 
 describe('Determine the password Reset routes behavior', () => {
@@ -22,15 +32,17 @@ describe('Determine the password Reset routes behavior', () => {
     describe('Test the reset of a password', () => {
 
 
-        it('should return 202 because the email doesn\'t exist in the db but the user doesn\'t have to know that', async () => {
+        it('should return 202 because the email doesn\'t exist in the db but the user doesn\'t have to know that', async (done) => {
             const response = await request(app).post('/passwordReset')
                 .send({
                     email: 'pomme@pomui.com',
                 }).expect(202);
+			
+			done();
 
         });
 
-        it('should return 202 because the email exist but the user doesn\'t have to know it', async () => {
+        it('should return 202 because the email exist but the user doesn\'t have to know it', async (done) => {
             const user = await UserRepository.getUserByEmail('eric@gmail.com');
             expect(await user?.getPassword_Resets()).toHaveLength(0);
 
@@ -41,17 +53,19 @@ describe('Determine the password Reset routes behavior', () => {
 
             expect(await user?.getPassword_Resets()).toHaveLength(1);
 
-
+			done();
         });
 
-        it('should return 202 when the email is not fill because the user doesn\'t have to know how to do this request', async () => {
+        it('should return 202 when the email is not fill because the user doesn\'t have to know how to do this request', async (done) => {
             const response = await request(app).post('/passwordReset')
                 .send({
                 }).expect(202);
+			
+			done();
 
         });
 
-        it('should return 202 and add 2 token but always have one for the user , the latest add', async () => {
+        it('should return 202 and add 2 token but always have one for the user , the latest add', async (done) => {
              await request(app).post('/passwordReset')
                 .send({
                     email: 'eric@gmail.com',
@@ -71,6 +85,8 @@ describe('Determine the password Reset routes behavior', () => {
 
             //the first token has been deleted when the second has been add
             expect(passwordResetRequestOne).not.toEqual(passwordResetRequestTwo);
+
+			done();
         });
     });
 });
