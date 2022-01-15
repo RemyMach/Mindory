@@ -16,7 +16,6 @@ pipeline {
             steps {
 				sh "echo je suis ${params.pomme}"
 				sh "echo je suis ${env.pomme}"
-                sh 'ls -la'
             }
         }
 
