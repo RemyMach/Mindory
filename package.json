@@ -9,7 +9,8 @@
     "resetDBForce": "env-cmd -f ./config/dev_force.env ts-node src/db/reset.db.ts",
     "start-dev": "env-cmd -f ./config/prod.env ts-node src/index.ts",
     "start": "node dist/index.js",
-    "test": "env-cmd -f ./config/test.env jest --runInBand --collectCoverage --watchAll"
+    "test": "env-cmd -f ./config/test.env jest --runInBand --collectCoverage --watchAll",
+	"test-jenkins": "env-cmd -f ../config/test.env jest --runInBand --collectCoverage --watchAll"
   },
   "repository": {
     "type": "git",
