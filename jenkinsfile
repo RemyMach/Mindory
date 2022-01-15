@@ -1,29 +1,30 @@
 pipeline {
 	agent any
 	tools {nodejs "node"}
-    
-	stage('Git') {
-		steps {
-			git 'https://github.com/RemyMach/Mindory'
+    stages {
+		stage('Git') {
+			steps {
+				git 'https://github.com/RemyMach/Mindory'
+			}
 		}
-	}
-		
-	stage('Build') {
-		steps {
-			sh 'npm install'
-		}
-	} 
+			
+		stage('Build') {
+			steps {
+				sh 'npm install'
+			}
+		} 
 
-	stage('SCM') {
-		steps {
-			sh 'checkout scm'
+		stage('SCM') {
+			steps {
+				sh 'checkout scm'
+			}
 		}
-	}
 
-	stage('SonarQube Analysis') {
-		def scannerHome = tool 'SonarScanner';
-		withSonarQubeEnv() {
-			sh "${scannerHome}/bin/sonar-scanner"
+		stage('SonarQube Analysis') {
+			def scannerHome = tool 'SonarScanner';
+			withSonarQubeEnv() {
+				sh "${scannerHome}/bin/sonar-scanner"
+			}
 		}
 	}
 }
