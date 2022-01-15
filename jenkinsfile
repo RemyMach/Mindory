@@ -39,7 +39,13 @@ pipeline {
 		stage('Deploy') {
 			steps {
 				script {
-					sh "if [ \"\$(git remote -v | grep heroku)\" != ''  ];then git remote add heroku https://github.com/RemyMach/Mindory.git; else echo \"repo heroku already present\"; fi"
+					sh '''#!/bin/bash
+                 		if [ "$(git remote -v | grep heroku)" != ''  ];then
+							git remote add heroku https://git.heroku.com/mindory.git
+						else
+							echo "jean"
+						fi
+         			'''
 					sh "git push heroku main"
 				}
 			}
