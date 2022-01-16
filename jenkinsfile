@@ -1,7 +1,9 @@
 pipeline {
 	agent any
 	tools {nodejs "my_node"}
-
+	environment {
+		COMMIT_MESSAGE_CUSTOM = sh(script='$(git log -1  --pretty="%s")', , returnStdout: true).trim()
+	}
     stages {
 
         stage("Env Variables") {
@@ -16,7 +18,7 @@ pipeline {
 
 		stage('Prepare Repo') {
 			when {
-                expression { $(git log -1  --pretty="%s") ==~ /(release-*)/ } 
+                expression { $COMMIT_MESSAGE_CUSTOM ==~ /(release-*)/ } 
 			}
             steps {
 				script {
