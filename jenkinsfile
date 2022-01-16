@@ -18,7 +18,7 @@ pipeline {
 
 		stage('Prepare Repo') {
 			when {
-                expression { "release" =~ /release-*/ } 
+                expression { "release" ==~ /release-\*/ } 
 			}
             steps {
 				script {
