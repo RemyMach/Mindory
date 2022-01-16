@@ -3,13 +3,13 @@ pipeline {
 	tools {nodejs "my_node"}
 
 	environment {
-		COMMIT_MESSAGE = sh(script: '$(git log -1  --pretty="%s")', , returnStdout: true).trim()
+		COMMIT_MESSAGE = sh(script: 'git log -1  --pretty="%s"', , returnStdout: true).trim()
 	}
     stages {
 
         stage("Env Variables") {
             steps {
-				sh 'echo $(git log -1  --pretty="%s")'
+				//sh 'echo $(git log -1  --pretty="%s")'
 				sh 'echo "$COMMIT_MESSAGE"'
                 sh "printenv"
 				echo "The build number is ${env.GIT_BRANCH}"
