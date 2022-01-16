@@ -4,14 +4,16 @@ pipeline {
     stages {
 
 		stage('Prepare Repo') {
+			when { tag "*" }
             steps {
 				script {
 					sh "rm -rf dist"
+					sh "echo \$TAG_NAME"
 				}
 			}
     	}
 
-		stage('Prepare Deploy') {
+		/*stage('Prepare Deploy') {
 			when { tag "release-*" }
             steps {
 				script {
@@ -59,6 +61,6 @@ pipeline {
 					sh "git add . && git commit -m \"mise en production\" && git push heroku main"
 				}
 			}
-    	}
+    	}*/
 	}
 }
