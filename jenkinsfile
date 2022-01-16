@@ -26,7 +26,7 @@ pipeline {
 				}
 			}
     	}*/
-		
+
 
 
 		stage('Deploy') {
@@ -39,7 +39,7 @@ pipeline {
 							git remote add heroku https://git.heroku.com/mindory.git
 						fi
          			'''
-					sh "git add . && git commit -m \"mise en production\" && git push heroku main"
+					sh "git checkout main && git add . && git commit -m \"mise en production\" && git push heroku main"
 				}
 			}
     	}
