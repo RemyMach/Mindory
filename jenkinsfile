@@ -6,7 +6,7 @@ pipeline {
 		stage('Build') {
             steps {
                 sh 'npm ci'
-				sh 'tsc'
+				sh 'rm -rf dist && tsc'
             }
         }
 
@@ -26,7 +26,6 @@ pipeline {
 				}
 			}
     	}*/
-
 
 		stage('Deploy') {
 			//when { tag "release-*" }
