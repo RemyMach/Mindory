@@ -1,25 +1,16 @@
 pipeline {
 	agent any
 	tools {nodejs "my_node"}
-	environment {
-		pomme = "${params.pomme}"
-	}
     stages {
 
 		stage('Build') {
             steps {
                 sh 'npm ci'
+				sh 'tsc'
             }
         }
 
-		stage('display') {
-            steps {
-				sh "pwd"
-				sh "ls -la ../"
-            }
-        }
-
-		stage('test') {
+		/*stage('test') {
             steps {
                 sh 'npm run test-jenkins --testMatch dist/tests/passwordReset.test.js'
             }
@@ -34,23 +25,21 @@ pipeline {
 					sh "${scannerHome}/bin/sonar-scanner"
 				}
 			}
-    	}
+    	}*/
 
 
 		stage('Deploy') {
-			steps {
+			when { tag "release-*" }
+            steps {
 				script {
 					sh '''#!/bin/bash
                  		if [ "$(git remote -v | grep heroku)" = '\n'  ];then
 						 	echo "result $(git remote -v | grep heroku)"
 							git remote add heroku https://git.heroku.com/mindory.git
-						else
-							echo "jean"
 						fi
          			'''
 					sh "git pull origin main && git checkout main && git pull && git push heroku main"
 				}
-
 			}
     	}
 	}

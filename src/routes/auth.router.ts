@@ -49,7 +49,7 @@ authRouter.post("/subscribe",
             password,
             username
         });
-    }catch(e) {
+    }catch(e: any) {
         return res.status(400).send(e.message).end();
     }
 
