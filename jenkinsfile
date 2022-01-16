@@ -3,7 +3,7 @@ pipeline {
 	tools {nodejs "my_node"}
     stages {
 		environment {
-			COMMIT_MESSAGE = sh 'echo $(git log -1  --pretty="%s")'
+			COMMIT_MESSAGE = '$(git log -1  --pretty="%s")'
 		}
 
         stage("Env Variables") {
