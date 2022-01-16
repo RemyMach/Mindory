@@ -3,6 +3,12 @@ pipeline {
 	tools {nodejs "my_node"}
     stages {
 
+        stage("Env Variables") {
+            steps {
+                sh "printenv"
+            }
+        }
+
 		stage('Prepare Repo') {
 			when { tag "*" }
             steps {
