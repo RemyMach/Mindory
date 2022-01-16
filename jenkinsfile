@@ -7,7 +7,8 @@ pipeline {
 			//when { tag "release-*" }
             steps {
 				script {
-					sh "git checkout main"
+					sh "echo \"branche ${BRANCH_NAME}\""
+					sh "rm -rf dist && git checkout main"
 				}
 			}
     	}
@@ -15,7 +16,7 @@ pipeline {
 		stage('Build') {
             steps {
                 sh 'npm ci'
-				sh 'rm -rf dist && tsc'
+				sh 'tsc'
             }
         }
 
