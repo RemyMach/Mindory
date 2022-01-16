@@ -48,9 +48,9 @@ pipeline {
 							echo "jean"
 						fi
          			'''
-					sh "git pull origin main && git checkout main && git push heroku main"
+					sh "git pull origin main && git checkout main && git pull && git push heroku main"
 				}
-				
+
 			}
     	}
 	}
