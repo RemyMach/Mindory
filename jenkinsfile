@@ -18,12 +18,12 @@ pipeline {
 
 		stage('Prepare Repo') {
 			when {
-                expression { true } 
+                expression { "release-1.0.0" =~ /release-*/ } 
 			}
             steps {
 				script {
 					sh "rm -rf dist"
-					sh "echo \$TAG_NAME"
+					sh 'echo "on rentre"'
 				}
 			}
     	}
