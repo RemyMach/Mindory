@@ -18,7 +18,7 @@ pipeline {
 
 		stage('Prepare Repo') {
 			when {
-                expression { COMMIT_MESSAGE_CUSTOM ==~ /(release-*)/ } 
+                expression { "release-1.0.0" ==~ /(release-*)/ } 
 			}
             steps {
 				script {
