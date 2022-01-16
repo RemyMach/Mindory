@@ -8,7 +8,7 @@ pipeline {
             steps {
 				script {
 					sh 'echo $BRANCH_NAME'
-					sh "rm -rf dist && git checkout main"
+					sh "rm -rf dist && git checkout main && git pull"
 				}
 			}
     	}
