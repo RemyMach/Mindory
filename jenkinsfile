@@ -4,11 +4,19 @@ pipeline {
     stages {
 
 		stage('Prepare Repo') {
-			//when { tag "release-*" }
+            steps {
+				script {
+					sh "rm -rf dist"
+				}
+			}
+    	}
+
+		stage('Prepare Deploy') {
+			when { tag "release-*" }
             steps {
 				script {
 					sh 'echo $BRANCH_NAME'
-					sh "rm -rf dist && git checkout main && git pull"
+					sh "git checkout main && git pull"
 				}
 			}
     	}
@@ -39,7 +47,7 @@ pipeline {
 
 
 		stage('Deploy') {
-			//when { tag "release-*" }
+			when { tag "release-*" }
             steps {
 				script {
 					sh '''#!/bin/bash
