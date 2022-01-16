@@ -35,7 +35,7 @@ pipeline {
 				}
 			}
     	}*/
-		
+
 
 		stage('Deploy') {
 			steps {
@@ -48,7 +48,7 @@ pipeline {
 							echo "jean"
 						fi
          			'''
-					sh "git add . && git commit -m \"deploy\" && git push heroku main"
+					sh "git push heroku main"
 				}
 			}
     	}
