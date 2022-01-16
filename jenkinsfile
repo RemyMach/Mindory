@@ -29,7 +29,7 @@ pipeline {
 
 
 		stage('Deploy') {
-			when { tag "release-*" }
+			//when { tag "release-*" }
             steps {
 				script {
 					sh '''#!/bin/bash
