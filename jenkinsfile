@@ -19,9 +19,8 @@ pipeline {
 					sh "echo \$TAG_NAME"
 				}
 			}
-			
-    	}
 
+    	}
 		stage('Help') {
             steps {
 				script {
