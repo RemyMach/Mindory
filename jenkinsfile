@@ -2,7 +2,7 @@ pipeline {
 	agent any
 	tools {nodejs "my_node"}
 	environment {
-		COMMIT_MESSAGE_CUSTOM = sh(script='$(git log -1  --pretty="%s")', , returnStdout: true).trim()
+		COMMIT_MESSAGE_CUSTOM = sh(script='git log -1  --pretty="%s"', , returnStdout: true).trim()
 	}
     stages {
 
