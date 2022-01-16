@@ -13,6 +13,14 @@ pipeline {
 			}
     	}
 
+		stage('Help') {
+            steps {
+				script {
+					sh "echo \$TAG_NAME"
+				}
+			}
+    	}
+
 		/*stage('Prepare Deploy') {
 			when { tag "release-*" }
             steps {
