@@ -3,6 +3,15 @@ pipeline {
 	tools {nodejs "my_node"}
     stages {
 
+		stage('Prepare Repo') {
+			//when { tag "release-*" }
+            steps {
+				script {
+					sh "git checkout main"
+				}
+			}
+    	}
+
 		stage('Build') {
             steps {
                 sh 'npm ci'
@@ -39,7 +48,7 @@ pipeline {
 							git remote add heroku https://git.heroku.com/mindory.git
 						fi
          			'''
-					sh "git checkout main && git add . && git commit -m \"mise en production\" && git push heroku main"
+					sh "git add . && git commit -m \"mise en production\" && git push heroku main"
 				}
 			}
     	}
