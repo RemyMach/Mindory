@@ -5,6 +5,7 @@ pipeline {
 
         stage("Env Variables") {
             steps {
+				sh 'echo $(git log -1  --pretty="%s")'
                 sh "printenv"
 				echo "The build number is ${env.GIT_BRANCH}"
 				sh 'echo "I can access $BUILD_NUMBER in shell command as well."'
