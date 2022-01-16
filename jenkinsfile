@@ -7,7 +7,7 @@ pipeline {
 			//when { tag "release-*" }
             steps {
 				script {
-					sh 'echo ${env.BRANCH_NAME}'
+					sh 'echo $BRANCH_NAME'
 					sh "rm -rf dist && git checkout main && git pull"
 				}
 			}
