@@ -17,11 +17,9 @@ pipeline {
         }
 
 		stage('Prepare Repo') {
-			environment {
-				COMMIT_MESSAGE_CUSTOM = sh(script: 'git log -1  --pretty="%s"', , returnStdout: true).trim()
-			}
+			
 			when {
-                expression { $COMMIT_MESSAGE_CUSTOM ==~ /(release-*)/ } 
+                expression { COMMIT_MESSAGE_CUSTOM ==~ /(release-*)/ } 
 			}
             steps {
 				script {
