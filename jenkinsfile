@@ -8,7 +8,6 @@ pipeline {
 
         stage("Env Variables") {
             steps {
-				//sh 'echo $(git log -1  --pretty="%s")'
 				sh 'echo "$COMMIT_MESSAGE_CUSTOM"'
                 sh "printenv"
 				echo "The build number is ${env.GIT_BRANCH}"
@@ -17,29 +16,17 @@ pipeline {
         }
 
 		stage('Prepare Repo') {
-			when {
-                expression { COMMIT_MESSAGE_CUSTOM =~ /^release-.*$/ } 
-			}
             steps {
 				script {
 					sh "rm -rf dist"
-					sh 'echo "on rentre"'
 				}
 			}
     	}
 
-		stage('Help') {
-            steps {
-				script {
-					sh "echo \$TAG_NAME"
-				}
+		stage('Prepare Deploy') {
+			when {
+                expression { COMMIT_MESSAGE_CUSTOM =~ /^release-.*$/ } 
 			}
-   
-		}
-
-
-		/*stage('Prepare Deploy') {
-			when { tag "release-*" }
             steps {
 				script {
 					sh 'echo $BRANCH_NAME'
@@ -74,7 +61,9 @@ pipeline {
 
 
 		stage('Deploy') {
-			when { tag "release-*" }
+			when {
+                expression { COMMIT_MESSAGE_CUSTOM =~ /^release-.*$/ } 
+			}
             steps {
 				script {
 					sh '''#!/bin/bash
@@ -86,6 +75,6 @@ pipeline {
 					sh "git add . && git commit -m \"mise en production\" && git push heroku main"
 				}
 			}
-    	}*/
+    	}
 	}
 }
